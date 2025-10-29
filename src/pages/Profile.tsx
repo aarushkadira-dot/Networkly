@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { User, School, MapPin, Briefcase, Award, Code } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Badge } from '../components/Badge';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 import type { Database } from '../lib/database.types';
+import { fadeInUp, staggerContainer } from '../lib/animations';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
@@ -105,10 +108,7 @@ export function Profile() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-electric-blue border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-charcoal">Loading profile...</p>
-        </div>
+        <LoadingSpinner size="lg" message="Loading profile..." />
       </div>
     );
   }
@@ -116,7 +116,12 @@ export function Profile() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-center mb-8">
+        <motion.div 
+          className="flex justify-between items-center mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <h1 className="text-3xl md:text-4xl font-bold text-royal-purple">
             {editing ? 'Edit Profile' : 'My Profile'}
           </h1>
@@ -147,10 +152,18 @@ export function Profile() {
               </Button>
             </div>
           )}
-        </div>
+        </motion.div>
 
-        {editing ? (
-          <div className="space-y-6">
+        <AnimatePresence mode="wait">
+          {editing ? (
+            <motion.div 
+              className="space-y-6"
+              key="editing"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
             <Card>
               <h2 className="text-xl font-bold text-charcoal mb-4">Basic Information</h2>
               <div className="space-y-4">
@@ -258,14 +271,25 @@ export function Profile() {
                 ))}
               </div>
             </Card>
-          </div>
+          </motion.div>
         ) : (
-          <div className="space-y-6">
-            <Card>
-              <div className="flex items-start gap-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-electric-blue to-soft-teal rounded-full flex items-center justify-center flex-shrink-0">
-                  <User className="w-12 h-12 text-white" />
-                </div>
+          <motion.div 
+            className="space-y-6"
+            key="viewing"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div variants={fadeInUp}>
+              <Card>
+                <div className="flex items-start gap-6">
+                  <motion.div 
+                    className="w-24 h-24 bg-gradient-to-br from-electric-blue to-soft-teal rounded-full flex items-center justify-center flex-shrink-0"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <User className="w-12 h-12 text-white" />
+                  </motion.div>
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-charcoal mb-2">
                     {profile?.full_name || 'Complete your profile'}
@@ -296,9 +320,11 @@ export function Profile() {
                 </div>
               </div>
             </Card>
+            </motion.div>
 
             {profile?.interests && profile.interests.length > 0 && (
-              <Card>
+              <motion.div variants={fadeInUp}>
+                <Card>
                 <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
                   <Briefcase className="w-5 h-5 text-electric-blue" />
                   Interests
@@ -309,10 +335,12 @@ export function Profile() {
                   ))}
                 </div>
               </Card>
+              </motion.div>
             )}
 
             {profile?.skills && profile.skills.length > 0 && (
-              <Card>
+              <motion.div variants={fadeInUp}>
+                <Card>
                 <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
                   <Code className="w-5 h-5 text-emerald-green" />
                   Skills
@@ -323,10 +351,12 @@ export function Profile() {
                   ))}
                 </div>
               </Card>
+              </motion.div>
             )}
 
             {profile?.achievements && profile.achievements.length > 0 && (
-              <Card>
+              <motion.div variants={fadeInUp}>
+                <Card>
                 <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
                   <Award className="w-5 h-5 text-coral-peach" />
                   Achievements
@@ -340,10 +370,12 @@ export function Profile() {
                   ))}
                 </ul>
               </Card>
+              </motion.div>
             )}
 
             {profile?.projects && profile.projects.length > 0 && (
-              <Card>
+              <motion.div variants={fadeInUp}>
+                <Card>
                 <h3 className="text-lg font-bold text-charcoal mb-3">Projects</h3>
                 <ul className="space-y-2">
                   {profile.projects.map((project, index) => (
@@ -354,17 +386,21 @@ export function Profile() {
                   ))}
                 </ul>
               </Card>
+              </motion.div>
             )}
 
             {!profile?.full_name && (
-              <Card className="bg-warm-beige border-2 border-coral-peach">
-                <p className="text-charcoal text-center">
-                  Complete your profile to start applying for opportunities!
-                </p>
-              </Card>
+              <motion.div variants={fadeInUp}>
+                <Card className="bg-warm-beige border-2 border-coral-peach">
+                  <p className="text-charcoal text-center">
+                    Complete your profile to start applying for opportunities!
+                  </p>
+                </Card>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
     </div>
   );

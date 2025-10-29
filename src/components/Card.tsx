@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 interface CardProps {
   children: ReactNode;
@@ -7,13 +8,29 @@ interface CardProps {
 }
 
 export function Card({ children, className = '', hover = false }: CardProps) {
+  const cardVariants = hover
+    ? {
+        rest: { 
+          y: 0, 
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)' 
+        },
+        hover: { 
+          y: -6,
+          boxShadow: '0 12px 24px rgba(0, 0, 0, 0.15)',
+          transition: { duration: 0.3, ease: 'easeOut' }
+        }
+      }
+    : {};
+
   return (
-    <div
-      className={`bg-white rounded-xl shadow-soft p-6 transition-all duration-200
-        ${hover ? 'hover:shadow-lifted hover:-translate-y-0.5 cursor-pointer' : ''}
-        ${className}`}
+    <motion.div
+      className={`bg-white rounded-xl shadow-soft p-6 ${hover ? 'cursor-pointer' : ''} ${className}`}
+      initial="rest"
+      whileHover="hover"
+      variants={cardVariants}
+      transition={{ duration: 0.2 }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

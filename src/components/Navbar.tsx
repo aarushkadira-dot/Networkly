@@ -1,15 +1,11 @@
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Bell, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { Button } from './Button';
 
 interface NavbarProps {
   onAuthClick: () => void;
 }
 
 export function Navbar({ onAuthClick }: NavbarProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut, isAdmin } = useAuth();
   const location = useLocation();
 
@@ -24,137 +20,66 @@ export function Navbar({ onAuthClick }: NavbarProps) {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="bg-white shadow-soft sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-9 h-9 bg-gradient-to-br from-electric-blue to-soft-teal rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">N</span>
-            </div>
-            <span className="text-xl font-bold text-royal-purple">Networkly</span>
-          </Link>
-
-          <div className="hidden md:flex items-center space-x-1">
-            {publicLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  isActive(link.path)
-                    ? 'bg-electric-blue text-white'
-                    : 'text-charcoal hover:bg-gray-100'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-
-          <div className="hidden md:flex items-center space-x-3">
-            {user ? (
-              <>
-                {isAdmin && (
-                  <Link to="/admin">
-                    <Button variant="outline" size="sm">
-                      Admin
-                    </Button>
-                  </Link>
-                )}
-                <Link to="/notifications" className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <Bell className="w-5 h-5 text-charcoal" />
-                </Link>
-                <Link to="/profile">
-                  <Button variant="ghost" size="sm">
-                    <User className="w-4 h-4 mr-1.5" />
-                    Profile
-                  </Button>
-                </Link>
-                <Button variant="outline" size="sm" onClick={signOut}>
-                  Sign Out
-                </Button>
-              </>
-            ) : (
-              <Button size="sm" onClick={onAuthClick}>
-                Sign In
-              </Button>
-            )}
-          </div>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+    <nav className="fixed top-0 w-full z-50 bg-transparent backdrop-blur-md transition-all duration-300 font-open-sans">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-center">
+        {/* Center: Links */}
+        <div className="hidden md:flex space-x-8 text-white font-medium">
+          {publicLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                isActive(link.path)
+                  ? 'bg-cyan-500 text-white font-semibold shadow-lg'
+                  : 'hover:text-cyan-300 hover:bg-white/10'
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
         </div>
-      </div>
 
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white">
-          <div className="px-4 py-3 space-y-2">
-            {publicLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-lg font-medium transition-all ${
-                  isActive(link.path)
-                    ? 'bg-electric-blue text-white'
-                    : 'text-charcoal hover:bg-gray-100'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-            {user ? (
-              <>
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-2.5 rounded-lg font-medium text-charcoal hover:bg-gray-100"
-                  >
+        {/* Right: Buttons */}
+        <div className="flex space-x-4 absolute right-4">
+          {user ? (
+            <>
+              {isAdmin && (
+                <Link to="/admin">
+                  <button className="text-white px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
                     Admin
-                  </Link>
-                )}
-                <Link
-                  to="/notifications"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-2.5 rounded-lg font-medium text-charcoal hover:bg-gray-100"
-                >
-                  Notifications
+                  </button>
                 </Link>
-                <Link
-                  to="/profile"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-2.5 rounded-lg font-medium text-charcoal hover:bg-gray-100"
-                >
+              )}
+              <Link to="/profile">
+                <button className="text-white px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
                   Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    signOut();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2.5 rounded-lg font-medium text-charcoal hover:bg-gray-100"
-                >
-                  Sign Out
                 </button>
-              </>
-            ) : (
-              <button
-                onClick={() => {
-                  onAuthClick();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full text-left px-4 py-2.5 rounded-lg font-medium bg-electric-blue text-white"
+              </Link>
+              <button 
+                onClick={signOut}
+                className="border border-white text-white px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <button 
+                onClick={() => window.location.href = '/students'}
+                className="bg-gradient-to-r from-royal-blue to-bright-teal text-white px-4 py-2 rounded-lg font-semibold hover:opacity-95 transition-colors"
+              >
+                Connect with Students
+              </button>
+              <button 
+                onClick={onAuthClick}
+                className="border border-white text-white px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
               >
                 Sign In
               </button>
-            )}
-          </div>
+            </>
+          )}
         </div>
-      )}
+      </div>
     </nav>
   );
 }

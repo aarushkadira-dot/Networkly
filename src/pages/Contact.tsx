@@ -1,153 +1,444 @@
 import { useState } from 'react';
-import { Mail, MessageSquare, Send } from 'lucide-react';
+import { Mail, MessageSquare, Send, CheckCircle, AlertCircle, Sparkles, Heart, MessageCircleHeart, Clock, Shield } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../components/Card';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
+import { useToast } from '../components/SuccessToast';
+import { ConfettiCelebration } from '../components/SuccessToast';
+import { fadeInUp, staggerContainer } from '../lib/animations';
 
 export function Contact() {
+  const { showCelebration } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
     message: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setSubmitted(false);
-    }, 3000);
+  const validateField = (name: string, value: string) => {
+    switch (name) {
+      case 'name':
+        return value.length < 2 ? 'Name must be at least 2 characters' : '';
+      case 'email':
+        return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? 'Please enter a valid email' : '';
+      case 'subject':
+        return value.length < 5 ? 'Subject must be at least 5 characters' : '';
+      case 'message':
+        return value.length < 10 ? 'Message must be at least 10 characters' : '';
+      default:
+        return '';
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Validate on change if field was touched
+    if (touchedFields.has(name)) {
+      const error = validateField(name, value);
+      setErrors({ ...errors, [name]: error });
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setTouchedFields(new Set([...touchedFields, name]));
+    const error = validateField(name, value);
+    setErrors({ ...errors, [name]: error });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate all fields
+    const newErrors: Record<string, string> = {};
+    Object.keys(formData).forEach(key => {
+      const error = validateField(key, formData[key as keyof typeof formData]);
+      if (error) newErrors[key] = error;
     });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setTouchedFields(new Set(Object.keys(formData)));
+      return;
+    }
+
+    setSubmitted(true);
+    setShowConfetti(true);
+    showCelebration('Message sent successfully!');
+    
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 3000);
+
+    setTimeout(() => {
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setErrors({});
+      setTouchedFields(new Set());
+      setSubmitted(false);
+    }, 5000);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-12">
+      {showConfetti && <ConfettiCelebration />}
+      
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Hero Section */}
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.div
+            className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-electric-blue to-soft-teal flex items-center justify-center shadow-lg"
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+          >
+            <MessageCircleHeart className="w-10 h-10 text-white" />
+          </motion.div>
+          
           <h1 className="text-4xl md:text-5xl font-bold text-royal-purple mb-6">
-            Get in Touch
+            Let's Connect!
           </h1>
-          <p className="text-xl text-charcoal leading-relaxed">
-            Have questions, suggestions, or just want to chat? We'd love to hear from you.
+          <p className="text-xl text-charcoal leading-relaxed max-w-2xl mx-auto">
+            Have questions, ideas, or just want to chat?
+            <span className="font-bold text-electric-blue"> We're here to help you reach your goals!</span>
           </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <Card>
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-electric-blue bg-opacity-10 rounded-xl">
-                <Mail className="w-6 h-6 text-electric-blue" />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg text-charcoal mb-2">Email Us</h3>
-                <p className="text-gray-600 mb-2">For general inquiries</p>
-                <a
-                  href="mailto:saatviksantosh10@gmail.com"
-                  className="text-electric-blue hover:underline"
-                >
-                  saatviksantosh10@gmail.com
-                </a>
-                <br />
-                <a
-                  href="mailto:aarush.kadira@gmail.com"
-                  className="text-electric-blue hover:underline"
-                >
-                  aarush.kadira@gmail.com
-                </a>
-              </div>
+          <div className="flex items-center justify-center gap-6 mt-6 text-gray-600">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-electric-blue" />
+              <span className="text-sm">Every message matters</span>
             </div>
-          </Card>
-
-          <Card>
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-emerald-green bg-opacity-10 rounded-xl">
-                <MessageSquare className="w-6 h-6 text-emerald-green" />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg text-charcoal mb-2">Feedback</h3>
-                <p className="text-gray-600">
-                  Got ideas for features or improvements? We're all ears. Student feedback
-                  drives everything we build.
-                </p>
-              </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-5 h-5 text-emerald-green" />
+              <span className="text-sm">24hr response time</span>
             </div>
-          </Card>
-        </div>
+          </div>
+        </motion.div>
 
-        <Card>
-          <h2 className="text-2xl font-bold text-charcoal mb-6">Send us a Message</h2>
-          {submitted ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-emerald-green bg-opacity-10 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <Send className="w-8 h-8 text-emerald-green" />
-              </div>
-              <h3 className="text-xl font-bold text-charcoal mb-2">
-                Message Sent!
-              </h3>
-              <p className="text-gray-600">
-                We'll get back to you as soon as possible.
+        {/* Motivational Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-12"
+        >
+          <div className="bg-gradient-to-r from-electric-blue/10 to-purple-500/10 border-2 border-electric-blue/20 rounded-xl p-6">
+            <div className="flex items-center gap-3">
+              <Heart className="w-6 h-6 text-electric-blue flex-shrink-0" />
+              <p className="text-gray-700 font-medium">
+                <span className="font-bold text-electric-blue">Don't hesitate!</span> Whether it's feedback, questions,
+                or just a hello—we genuinely want to hear from you. Your input shapes Networkly!
               </p>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid md:grid-cols-2 gap-5">
-                <Input
-                  label="Your Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="John Doe"
-                  required
-                />
-                <Input
-                  label="Your Email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="you@example.com"
-                  required
-                />
+          </div>
+        </motion.div>
+
+        {/* Contact Options */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid md:grid-cols-2 gap-6 mb-12"
+        >
+          <motion.div variants={fadeInUp}>
+            <Card hover>
+              <div className="flex items-start gap-4">
+                <motion.div 
+                  className="p-4 bg-electric-blue bg-opacity-10 rounded-2xl"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
+                  <Mail className="w-8 h-8 text-electric-blue" />
+                </motion.div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-xl text-charcoal mb-2">Email Us Directly</h3>
+                  <p className="text-gray-600 mb-4">For quick questions or feedback</p>
+                  <div className="space-y-2">
+                    <a
+                      href="mailto:saatviksantosh10@gmail.com"
+                      className="block text-electric-blue hover:underline font-medium"
+                    >
+                      saatviksantosh10@gmail.com
+                    </a>
+                    <a
+                      href="mailto:aarush.kadira@gmail.com"
+                      className="block text-electric-blue hover:underline font-medium"
+                    >
+                      aarush.kadira@gmail.com
+                    </a>
+                  </div>
+                </div>
               </div>
-              <Input
-                label="Subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                placeholder="What's this about?"
-                required
-              />
-              <div>
-                <label className="block text-sm font-medium text-charcoal mb-1.5">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell us what's on your mind..."
-                  required
-                  rows={6}
-                  className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
-                    focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent resize-none"
-                />
+            </Card>
+          </motion.div>
+
+          <motion.div variants={fadeInUp}>
+            <Card hover>
+              <div className="flex items-start gap-4">
+                <motion.div 
+                  className="p-4 bg-emerald-green bg-opacity-10 rounded-2xl"
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
+                  <MessageSquare className="w-8 h-8 text-emerald-green" />
+                </motion.div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-xl text-charcoal mb-2">Share Your Ideas</h3>
+                  <p className="text-gray-600 mb-4">
+                    Got suggestions for features or improvements? Your feedback directly shapes what we build next!
+                  </p>
+                  <div className="flex gap-2">
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                      Feature Requests
+                    </span>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                      Bug Reports
+                    </span>
+                  </div>
+                </div>
               </div>
-              <Button type="submit" className="w-full md:w-auto">
-                <Send className="w-4 h-4 mr-2" />
-                Send Message
-              </Button>
-            </form>
-          )}
-        </Card>
+            </Card>
+          </motion.div>
+        </motion.div>
+
+        {/* Contact Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Card>
+            <div className="flex items-center gap-3 mb-6">
+              <Sparkles className="w-6 h-6 text-electric-blue" />
+              <h2 className="text-2xl font-bold text-charcoal">Send us a Message</h2>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {submitted ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="text-center py-12"
+                >
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 0.5 }}
+                    className="w-20 h-20 bg-emerald-green bg-opacity-10 rounded-full mx-auto mb-6 flex items-center justify-center"
+                  >
+                    <CheckCircle className="w-12 h-12 text-emerald-green" />
+                  </motion.div>
+                  
+                  <h3 className="text-2xl font-bold text-charcoal mb-3">
+                    Message Sent! 🎉
+                  </h3>
+                  <p className="text-gray-600 mb-2">
+                    Thanks for reaching out! We'll get back to you soon.
+                  </p>
+                  <p className="text-electric-blue font-medium">
+                    Keep building your future! 🚀
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  onSubmit={handleSubmit}
+                  className="space-y-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <Input
+                        label="Your Name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        placeholder="John Doe"
+                        required
+                      />
+                      <AnimatePresence>
+                        {errors.name && touchedFields.has('name') && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="flex items-center gap-2 mt-2 text-red-600 text-sm"
+                          >
+                            <AlertCircle className="w-4 h-4" />
+                            <span>{errors.name}</span>
+                          </motion.div>
+                        )}
+                        {formData.name && !errors.name && touchedFields.has('name') && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-center gap-2 mt-2 text-green-600 text-sm"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                            <span>Looks good!</span>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    <div>
+                      <Input
+                        label="Your Email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        placeholder="you@example.com"
+                        required
+                      />
+                      <AnimatePresence>
+                        {errors.email && touchedFields.has('email') && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="flex items-center gap-2 mt-2 text-red-600 text-sm"
+                          >
+                            <AlertCircle className="w-4 h-4" />
+                            <span>{errors.email}</span>
+                          </motion.div>
+                        )}
+                        {formData.email && !errors.email && touchedFields.has('email') && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-center gap-2 mt-2 text-green-600 text-sm"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                            <span>Perfect!</span>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Input
+                      label="Subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="What's this about?"
+                      required
+                    />
+                    <AnimatePresence>
+                      {errors.subject && touchedFields.has('subject') && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="flex items-center gap-2 mt-2 text-red-600 text-sm"
+                        >
+                          <AlertCircle className="w-4 h-4" />
+                          <span>{errors.subject}</span>
+                        </motion.div>
+                      )}
+                      {formData.subject && !errors.subject && touchedFields.has('subject') && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="flex items-center gap-2 mt-2 text-green-600 text-sm"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          <span>Great!</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal mb-1.5">
+                      Message <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="Tell us what's on your mind... We're excited to hear from you! 💬"
+                      required
+                      rows={6}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all duration-200
+                        focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent resize-none"
+                    />
+                    <AnimatePresence>
+                      {errors.message && touchedFields.has('message') && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="flex items-center gap-2 mt-2 text-red-600 text-sm"
+                        >
+                          <AlertCircle className="w-4 h-4" />
+                          <span>{errors.message}</span>
+                        </motion.div>
+                      )}
+                      {formData.message && !errors.message && touchedFields.has('message') && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="flex items-center gap-2 mt-2 text-green-600 text-sm"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          <span>Awesome message!</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    <p className="text-sm text-gray-500 mt-2">
+                      {formData.message.length}/500 characters
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button type="submit" className="flex-1">
+                      <Send className="w-4 h-4 mr-2" />
+                      Send Message
+                    </Button>
+                    <motion.button
+                      type="button"
+                      onClick={() => {
+                        setFormData({ name: '', email: '', subject: '', message: '' });
+                        setErrors({});
+                        setTouchedFields(new Set());
+                      }}
+                      className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Clear Form
+                    </motion.button>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                    <Shield className="w-4 h-4 text-emerald-green" />
+                    <p>We respect your privacy and will never share your information</p>
+                  </div>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );

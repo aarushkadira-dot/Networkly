@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Search, Filter, Calendar, MapPin, ExternalLink, Bookmark, BookmarkCheck } from 'lucide-react';
+import { Search, Filter, Calendar, MapPin, ExternalLink, Bookmark, BookmarkCheck, GraduationCap, Award, Briefcase, Beaker, Trophy, Sparkles, ChevronDown } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Card } from '../components/Card';
 import { Badge } from '../components/Badge';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
+import { Tooltip } from '../components/Tooltip';
+import { LoadingSpinner } from '../components/LoadingSpinner';
+import { useToast } from '../components/SuccessToast';
 import type { Database } from '../lib/database.types';
 
 type Opportunity = Database['public']['Tables']['opportunities']['Row'];
@@ -17,12 +21,15 @@ interface OpportunitiesProps {
 
 export function Opportunities({ onAuthClick }: OpportunitiesProps) {
   const { user } = useAuth();
+  const { showCelebration } = useToast();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [gradeFilter, setGradeFilter] = useState<string>('all');
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
+  const [isGradeDropdownOpen, setIsGradeDropdownOpen] = useState(false);
 
   useEffect(() => {
     loadOpportunities();
@@ -31,17 +38,222 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
     }
   }, [user]);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.dropdown-container')) {
+        setIsTypeDropdownOpen(false);
+        setIsGradeDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const loadOpportunities = async () => {
+    // For non-logged in users, show only specific opportunities
+    if (!user) {
+      const publicOpportunities: Opportunity[] = [
+        {
+          id: 'public-1',
+          title: 'DECA - Distributive Education Clubs of America',
+          organization: 'DECA Inc.',
+          description: 'DECA prepares emerging leaders and entrepreneurs in marketing, finance, hospitality, and management. Compete in business competitions, develop leadership skills, and network with professionals.',
+          type: 'competition',
+          grade_levels: ['9', '10', '11', '12'],
+          deadline: '2025-12-31',
+          location: 'Nationwide',
+          application_url: 'https://www.deca.org',
+          interests: ['Business', 'Marketing', 'Leadership', 'Entrepreneurship'],
+          created_at: new Date().toISOString(),
+          requirements: null,
+          compensation: null
+        },
+        {
+          id: 'public-2',
+          title: 'HOSA - Future Health Professionals',
+          organization: 'HOSA',
+          description: 'HOSA is a career and technical student organization for future health professionals. Compete in health science events, develop leadership skills, and explore healthcare careers.',
+          type: 'competition',
+          grade_levels: ['9', '10', '11', '12'],
+          deadline: '2025-12-31',
+          location: 'Nationwide',
+          application_url: 'https://hosa.org',
+          interests: ['Healthcare', 'Medicine', 'Biology', 'Leadership'],
+          created_at: new Date().toISOString(),
+          requirements: null,
+          compensation: null
+        },
+        {
+          id: 'public-3',
+          title: "NASA Office of STEM Engagement Internship",
+          organization: 'NASA',
+          description: "NASA's Office of STEM Engagement (OSTEM) paid internships allow college-level students to contribute to the agency's mission to advance science, technology, aeronautics, and space exploration. OSTEM internships offer students an opportunity to gain practical work experience while working side-by-side with mentors who are research scientists, engineers, and individuals from many other professions. Internships may be full time or part time on a NASA center or facility. Join our NASA team and gain valuable on-the-job experience, build your resume, and strengthen your career readiness. We offer three sessions annually, so visit our website often for opportunities.",
+          type: 'internship',
+          grade_levels: ['11', '12'],
+          deadline: '2026-02-27',
+          location: 'Various NASA Centers',
+          application_url: 'https://intern.nasa.gov',
+          interests: ['STEM', 'Space', 'Science', 'Engineering', 'Research'],
+          created_at: new Date().toISOString(),
+          requirements: 'College-level student',
+          compensation: 'Paid internship'
+        },
+        {
+          id: 'public-4',
+          title: 'Coca-Cola Scholars Program',
+          organization: 'The Coca-Cola Scholars Foundation',
+          description: 'The Coca-Cola Scholars $20,000 college scholarship is accepting applications August 1 - September 30, 2025, from high school seniors across the country.',
+          type: 'scholarship',
+          grade_levels: ['12'],
+          deadline: '2025-09-30',
+          location: 'Nationwide',
+          application_url: 'https://www.coca-colascholarsfoundation.org',
+          interests: ['Academic Excellence', 'Leadership', 'Community Service'],
+          created_at: new Date().toISOString(),
+          requirements: 'High school senior',
+          compensation: '$20,000 scholarship'
+        },
+        {
+          id: 'public-5',
+          title: 'ISEF - International Science and Engineering Fair',
+          organization: 'Society for Science',
+          description: 'ISEF is the world\'s largest international pre-college science competition. Students compete for awards, scholarships, and the chance to represent their research on a global stage. Present your independent research project and compete with students from around the world.',
+          type: 'research',
+          grade_levels: ['9', '10', '11', '12'],
+          deadline: '2026-01-31',
+          location: 'International',
+          application_url: 'https://www.societyforscience.org/isef/',
+          interests: ['Science', 'Research', 'Engineering', 'STEM', 'Innovation'],
+          created_at: new Date().toISOString(),
+          requirements: 'Original research project',
+          compensation: 'Awards and scholarships up to $75,000'
+        }
+      ];
+      
+      // Randomize the order of opportunities
+      const shuffled = [...publicOpportunities].sort(() => Math.random() - 0.5);
+      setOpportunities(shuffled);
+      setLoading(false);
+      return;
+    }
+
+    // For logged-in users, fetch all opportunities from database
     const { data, error } = await supabase
       .from('opportunities')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*');
 
-    if (data) {
-      setOpportunities(data);
-    } else if (error) {
+    if (error) {
       console.error('Error loading opportunities:', error);
     }
+
+    // If no data from database, use mock data for development
+    if (!data || data.length === 0) {
+      const mockOpportunities: Opportunity[] = [
+        {
+          id: 'mock-1',
+          title: 'Summer Research Internship at Duke Health',
+          organization: 'Duke Health',
+          description: 'Join our biomedical research team for an 8-week summer program. Work alongside leading researchers on cutting-edge projects in cancer research, molecular biology, and clinical trials.',
+          type: 'internship',
+          grade_levels: ['11', '12'],
+          deadline: '2025-03-15',
+          location: 'Durham, NC',
+          application_url: 'https://dukehealth.org/internships',
+          interests: ['Biology', 'Medicine', 'Research'],
+          created_at: new Date().toISOString(),
+          requirements: null,
+          compensation: 'Stipend provided'
+        },
+        {
+          id: 'mock-2',
+          title: 'National Merit Scholarship',
+          organization: 'National Merit Scholarship Corporation',
+          description: 'Prestigious scholarship program recognizing academic excellence. Awards range from $2,500 to full-tuition scholarships at participating universities.',
+          type: 'scholarship',
+          grade_levels: ['11', '12'],
+          deadline: '2025-10-01',
+          location: 'Nationwide',
+          application_url: 'https://nationalmerit.org',
+          interests: ['Academic Excellence'],
+          created_at: new Date().toISOString(),
+          requirements: 'PSAT/NMSQT score',
+          compensation: '$2,500 - Full tuition'
+        },
+        {
+          id: 'mock-3',
+          title: 'MIT Launch Summer Program',
+          organization: 'MIT',
+          description: 'Four-week entrepreneurship program where students start their own company. Learn business fundamentals, pitch to investors, and develop real products.',
+          type: 'summer_program',
+          grade_levels: ['9', '10', '11', '12'],
+          deadline: '2025-02-28',
+          location: 'Cambridge, MA',
+          application_url: 'https://launch.mit.edu',
+          interests: ['Entrepreneurship', 'Business', 'Technology'],
+          created_at: new Date().toISOString(),
+          requirements: null,
+          compensation: 'Need-based financial aid available'
+        },
+        {
+          id: 'mock-4',
+          title: 'Congressional App Challenge',
+          organization: 'U.S. House of Representatives',
+          description: 'Design and create an app addressing a problem in your community. Winners receive national recognition and an invitation to Capitol Hill.',
+          type: 'competition',
+          grade_levels: ['9', '10', '11', '12'],
+          deadline: '2025-11-01',
+          location: 'Virtual',
+          application_url: 'https://congressionalappchallenge.us',
+          interests: ['Computer Science', 'Coding', 'Technology'],
+          created_at: new Date().toISOString(),
+          requirements: null,
+          compensation: 'Recognition and prizes'
+        },
+        {
+          id: 'mock-5',
+          title: 'Regeneron Science Talent Search',
+          organization: 'Regeneron Pharmaceuticals',
+          description: "Nation's oldest and most prestigious science research competition for high school seniors. Top prize: $250,000.",
+          type: 'competition',
+          grade_levels: ['12'],
+          deadline: '2025-11-15',
+          location: 'Nationwide',
+          application_url: 'https://regeneron.com/sts',
+          interests: ['Science', 'Research', 'STEM'],
+          created_at: new Date().toISOString(),
+          requirements: 'Original research project',
+          compensation: 'Up to $250,000 in prizes'
+        },
+        {
+          id: 'mock-6',
+          title: 'NASA SEES Internship',
+          organization: 'NASA',
+          description: 'Virtual summer internship focused on Earth science and climate research. Work with NASA scientists on real data and projects.',
+          type: 'internship',
+          grade_levels: ['10', '11', '12'],
+          deadline: '2025-01-31',
+          location: 'Virtual',
+          application_url: 'https://nasa.gov/sees',
+          interests: ['Science', 'Space', 'Environment'],
+          created_at: new Date().toISOString(),
+          requirements: null,
+          compensation: 'Unpaid (academic credit available)'
+        }
+      ];
+      // Randomize mock opportunities
+      const shuffledMock = [...mockOpportunities].sort(() => Math.random() - 0.5);
+      setOpportunities(shuffledMock);
+    } else {
+      // Randomize database opportunities
+      const shuffledData = [...data].sort(() => Math.random() - 0.5);
+      setOpportunities(shuffledData);
+    }
+    
     setLoading(false);
   };
 
@@ -85,15 +297,18 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
 
       if (data) {
         setApplications([...applications, data]);
+        showCelebration('Opportunity saved!');
       }
     }
   };
 
   const handleApply = (url: string | null) => {
+    // Always show sign-up modal for non-logged in users
     if (!user) {
       onAuthClick();
       return;
     }
+    // For logged-in users, open the application URL
     if (url) {
       window.open(url, '_blank');
     }
@@ -111,14 +326,44 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
   });
 
   const getTypeColor = (type: string) => {
-    const colors: Record<string, 'blue' | 'green' | 'purple' | 'teal' | 'peach'> = {
-      internship: 'blue',
-      scholarship: 'green',
-      summer_program: 'purple',
-      research: 'teal',
-      competition: 'peach',
+    const colors: Record<string, string> = {
+      internship: 'from-blue-500 to-cyan-400',
+      scholarship: 'from-emerald-500 to-teal-400',
+      summer_program: 'from-purple-500 to-pink-400',
+      research: 'from-teal-500 to-blue-400',
+      competition: 'from-orange-500 to-yellow-400',
     };
-    return colors[type] || 'gray';
+    return colors[type] || 'from-gray-500 to-gray-400';
+  };
+
+  const getTypeIcon = (type: string) => {
+    const icons: Record<string, JSX.Element> = {
+      internship: <Briefcase className="w-5 h-5" />,
+      scholarship: <Award className="w-5 h-5" />,
+      summer_program: <GraduationCap className="w-5 h-5" />,
+      research: <Beaker className="w-5 h-5" />,
+      competition: <Trophy className="w-5 h-5" />,
+    };
+    return icons[type] || <Sparkles className="w-5 h-5" />;
+  };
+
+  const typeOptions = [
+    { value: 'all', label: 'All Types', icon: <Filter className="w-4 h-4" /> },
+    { value: 'internship', label: 'Internships', icon: <Briefcase className="w-4 h-4" /> },
+    { value: 'scholarship', label: 'Scholarships', icon: <Award className="w-4 h-4" /> },
+    { value: 'summer_program', label: 'Summer Programs', icon: <GraduationCap className="w-4 h-4" /> },
+    { value: 'research', label: 'Research', icon: <Beaker className="w-4 h-4" /> },
+    { value: 'competition', label: 'Competitions', icon: <Trophy className="w-4 h-4" /> },
+  ];
+
+  const getGradeLabel = (grade: string) => {
+    const gradeLabels: Record<string, string> = {
+      '9': 'Freshman',
+      '10': 'Sophomore', 
+      '11': 'Junior',
+      '12': 'Senior'
+    };
+    return gradeLabels[grade] || grade;
   };
 
   const isSaved = (opportunityId: string) => {
@@ -127,151 +372,288 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-electric-blue border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-charcoal">Loading opportunities...</p>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-dark-navy via-deep-blue to-royal-blue flex items-center justify-center">
+        <LoadingSpinner size="lg" message="Loading opportunities..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-royal-purple mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-dark-navy via-deep-blue to-royal-blue pt-24 relative overflow-hidden">
+      {/* Animated background blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-bright-teal to-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute -top-10 -right-20 w-96 h-96 bg-gradient-to-br from-royal-blue to-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob" style={{ animationDelay: '4s' }}></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+        <motion.div 
+          className="mb-8 text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-2 mb-4 border border-white/20"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            <Sparkles className="w-5 h-5 text-bright-teal" />
+            <span className="text-white font-inter font-medium">{filteredOpportunities.length} Opportunities Available</span>
+          </motion.div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold mb-4 bg-gradient-to-r from-bright-teal to-royal-blue bg-clip-text text-transparent">
             Explore Opportunities
           </h1>
-          <p className="text-lg text-charcoal">
+          <p className="text-xl text-white max-w-3xl mx-auto">
             Discover internships, scholarships, programs, and competitions tailored for high schoolers.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="mb-8 space-y-4">
+        <motion.div 
+          className="mb-8 space-y-4 max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bright-teal" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search opportunities..."
-              className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-lg transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent"
+              placeholder="Search opportunities by title, organization, or description..."
+              className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border-2 border-white/20 rounded-2xl text-white placeholder-blue-200 transition-all duration-300
+                focus:outline-none focus:ring-2 focus:ring-bright-teal focus:border-bright-teal focus:bg-white/20"
             />
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <div className="flex items-center gap-2">
-              <Filter className="w-5 h-5 text-gray-600" />
-              <span className="text-sm font-medium text-charcoal">Filters:</span>
+          <div className="flex flex-wrap gap-3 items-center justify-center">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300">
+              <Filter className="w-4 h-4 text-bright-teal" />
+              <span className="text-sm font-inter font-medium text-white">Filters</span>
             </div>
-            <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-electric-blue"
-            >
-              <option value="all">All Types</option>
-              <option value="internship">Internships</option>
-              <option value="scholarship">Scholarships</option>
-              <option value="summer_program">Summer Programs</option>
-              <option value="research">Research</option>
-              <option value="competition">Competitions</option>
-            </select>
-            <select
-              value={gradeFilter}
-              onChange={(e) => setGradeFilter(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-electric-blue"
-            >
-              <option value="all">All Grades</option>
-              <option value="9">9th Grade</option>
-              <option value="10">10th Grade</option>
-              <option value="11">11th Grade</option>
-              <option value="12">12th Grade</option>
-            </select>
+            
+            <div className="relative dropdown-container">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300">
+                <Briefcase className="w-4 h-4 text-bright-teal" />
+                <button
+                  onClick={() => setIsTypeDropdownOpen(!isTypeDropdownOpen)}
+                  className="flex items-center gap-2 bg-transparent text-white text-sm font-inter font-medium focus:outline-none cursor-pointer rounded-full"
+                >
+                  <span>{typeOptions.find(opt => opt.value === typeFilter)?.label || 'All Types'}</span>
+                  <ChevronDown className={`w-3 h-3 text-bright-teal transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
+              
+              {/* Dropdown Menu */}
+              {isTypeDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-56 bg-dark-navy border border-white/20 rounded-lg shadow-2xl z-[100] overflow-hidden">
+                  {typeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setTypeFilter(option.value);
+                        setIsTypeDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-white text-sm font-inter hover:bg-white/10 transition-colors"
+                    >
+                      <span className="text-bright-teal flex-shrink-0">{option.icon}</span>
+                      <span className="flex-grow">{option.label}</span>
+                      {typeFilter === option.value && (
+                        <span className="ml-auto text-bright-teal flex-shrink-0">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="relative dropdown-container">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300">
+                <GraduationCap className="w-4 h-4 text-bright-teal" />
+                <button
+                  onClick={() => setIsGradeDropdownOpen(!isGradeDropdownOpen)}
+                  className="flex items-center gap-2 bg-transparent text-white text-sm font-inter font-medium focus:outline-none cursor-pointer rounded-full"
+                >
+                  <span>{gradeFilter === 'all' ? 'All Grades' : getGradeLabel(gradeFilter)}</span>
+                  <ChevronDown className={`w-3 h-3 text-bright-teal transition-transform ${isGradeDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
+              
+              {/* Dropdown Menu */}
+              {isGradeDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-56 bg-dark-navy border border-white/20 rounded-lg shadow-2xl z-[100] overflow-hidden">
+                  <button
+                    onClick={() => {
+                      setGradeFilter('all');
+                      setIsGradeDropdownOpen(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-white text-sm font-inter hover:bg-white/10 transition-colors"
+                  >
+                    <GraduationCap className="w-4 h-4 text-bright-teal flex-shrink-0" />
+                    <span className="flex-grow">All Grades</span>
+                    {gradeFilter === 'all' && (
+                      <span className="ml-auto text-bright-teal flex-shrink-0">✓</span>
+                    )}
+                  </button>
+                  {['9', '10', '11', '12'].map((grade) => (
+                    <button
+                      key={grade}
+                      onClick={() => {
+                        setGradeFilter(grade);
+                        setIsGradeDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-white text-sm font-inter hover:bg-white/10 transition-colors"
+                    >
+                      <GraduationCap className="w-4 h-4 text-bright-teal flex-shrink-0" />
+                      <span className="flex-grow">{getGradeLabel(grade)}</span>
+                      {gradeFilter === grade && (
+                        <span className="ml-auto text-bright-teal flex-shrink-0">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </motion.div>
 
         {filteredOpportunities.length === 0 ? (
-          <Card className="text-center py-12">
-            <p className="text-gray-600 text-lg">
+          <motion.div 
+            className="text-center py-12 px-6 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Sparkles className="w-16 h-16 text-bright-teal mx-auto mb-4" />
+            <p className="text-white text-xl font-medium">
               No opportunities found matching your criteria.
             </p>
-          </Card>
+            <p className="text-blue-200 mt-2">
+              Try adjusting your filters or search query.
+            </p>
+          </motion.div>
         ) : (
-          <div className="grid gap-6">
-            {filteredOpportunities.map((opp) => (
-              <Card key={opp.id} hover>
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="text-xl font-bold text-charcoal mb-1">
-                          {opp.title}
-                        </h3>
-                        <p className="text-electric-blue font-medium">
-                          {opp.organization}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => handleSaveOpportunity(opp.id)}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                      >
-                        {isSaved(opp.id) ? (
-                          <BookmarkCheck className="w-5 h-5 text-electric-blue" />
-                        ) : (
-                          <Bookmark className="w-5 h-5 text-gray-400" />
-                        )}
-                      </button>
+          <motion.div 
+            className="grid gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {filteredOpportunities.map((opp, index) => (
+              <motion.div
+                key={opp.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              >
+                {/* CARD CONTAINER */}
+                <div className="relative group bg-white/10 backdrop-blur-md border-2 border-white/20 rounded-3xl p-6 transition-all duration-300 group-hover:border-white/40 group-hover:bg-white/20">
+                  {/* Glow effect on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${getTypeColor(opp.type)} rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300`}></div>
+                  
+                  {/* BOOKMARK BUTTON - TOP RIGHT CORNER */}
+                  <button
+                    onClick={() => handleSaveOpportunity(opp.id)}
+                    className="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full border border-white/20 transition-all duration-300 shadow-lg z-50 text-white hover:text-blue-400"
+                    style={{
+                      position: 'absolute',
+                      top: '16px',
+                      right: '16px',
+                      zIndex: 999
+                    }}
+                  >
+                    {isSaved(opp.id) ? (
+                      <BookmarkCheck className="w-5 h-5 text-bright-teal" />
+                    ) : (
+                      <Bookmark className="w-5 h-5 text-white" />
+                    )}
+                  </button>
+
+                  {/* Type badge with icon - top left */}
+                  <div className="absolute -top-3 -left-3">
+                    <div className={`flex items-center gap-2 px-4 py-2 bg-gradient-to-r ${getTypeColor(opp.type)} rounded-full shadow-lg`}>
+                      {getTypeIcon(opp.type)}
+                      <span className="text-white font-semibold text-sm capitalize">
+                        {opp.type.replace('_', ' ')}
+                      </span>
+                    </div>
+                  </div>
+
+                    <div className="mt-8 mb-4">
+                      <h3 className="text-2xl font-bold text-white mb-2 line-clamp-2">
+                        {opp.title}
+                      </h3>
+                      <p className="text-bright-teal font-semibold text-lg">
+                        {opp.organization}
+                      </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      <Badge variant={getTypeColor(opp.type)}>
-                        {opp.type.replace('_', ' ')}
-                      </Badge>
+                    {/* Metadata */}
+                    <div className="flex flex-wrap gap-3 mb-4">
                       {opp.deadline && (
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
-                          <Calendar className="w-4 h-4" />
-                          <span>Due: {new Date(opp.deadline).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
+                          <Calendar className="w-4 h-4 text-bright-teal" />
+                          <span className="text-white text-sm font-medium">
+                            {new Date(opp.deadline).toLocaleDateString()}
+                          </span>
                         </div>
                       )}
                       {opp.location && (
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
-                          <MapPin className="w-4 h-4" />
-                          <span>{opp.location}</span>
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
+                          <MapPin className="w-4 h-4 text-bright-teal" />
+                          <span className="text-white text-sm font-medium">{opp.location}</span>
                         </div>
                       )}
                     </div>
 
-                    <p className="text-gray-600 mb-4 line-clamp-3">
+                    <p className="text-white mb-4 line-clamp-3 leading-relaxed">
                       {opp.description}
                     </p>
 
+                    {/* Interest tags */}
                     {opp.interests && opp.interests.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {opp.interests.map((interest, index) => (
-                          <Badge key={index} variant="gray" className="text-xs">
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {opp.interests.map((interest, idx) => (
+                          <span 
+                            key={idx}
+                            className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-white text-xs font-medium border border-white/20 hover:bg-white/20 transition-colors"
+                          >
                             {interest}
-                          </Badge>
+                          </span>
                         ))}
                       </div>
                     )}
-                  </div>
 
-                  <div className="flex flex-col gap-2 md:min-w-[140px]">
-                    <Button
+                    {/* Apply button with neon gradient */}
+                    <div 
+                      className="w-full cursor-pointer"
+                      style={{ cursor: 'pointer' }}
                       onClick={() => handleApply(opp.application_url)}
-                      size="sm"
-                      className="w-full"
                     >
-                      <ExternalLink className="w-4 h-4 mr-1" />
-                      Apply
-                    </Button>
-                  </div>
+                      <motion.button
+                        className="w-full py-3 px-6 bg-gradient-to-r from-[#00C6FF] to-[#0072FF] text-white font-bold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 group"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        style={{ 
+                          cursor: 'pointer',
+                          pointerEvents: 'auto',
+                          border: 'none',
+                          outline: 'none'
+                        }}
+                      >
+                        <span>Apply Now</span>
+                        <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </motion.button>
+                    </div>
                 </div>
-              </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

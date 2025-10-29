@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -13,11 +14,11 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseStyles = 'font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center';
 
   const variants = {
-    primary: 'bg-electric-blue text-white hover:bg-blue-600 shadow-soft hover:shadow-lifted active:scale-[0.98]',
-    secondary: 'bg-emerald-green text-white hover:bg-teal-600 shadow-soft hover:shadow-lifted active:scale-[0.98]',
+    primary: 'bg-electric-blue text-white hover:bg-blue-600 shadow-soft',
+    secondary: 'bg-emerald-green text-white hover:bg-teal-600 shadow-soft',
     outline: 'border-2 border-electric-blue text-electric-blue hover:bg-electric-blue hover:text-white',
     ghost: 'text-electric-blue hover:bg-blue-50',
   };
@@ -29,11 +30,17 @@ export function Button({
   };
 
   return (
-    <button
+    <motion.button
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      whileHover={{ 
+        scale: 1.02,
+        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)'
+      }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2, ease: 'easeInOut' }}
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }
