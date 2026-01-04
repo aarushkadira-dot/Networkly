@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, MessageSquare, Send, CheckCircle, AlertCircle, Sparkles, Heart, MessageCircleHeart, Clock, Shield } from 'lucide-react';
+import { Mail, MessageSquare, Send, CheckCircle, AlertCircle, Sparkles, Heart, Clock, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '../components/Card';
 import { Input } from '../components/Input';
@@ -8,7 +8,7 @@ import { useToast } from '../components/SuccessToast';
 import { ConfettiCelebration } from '../components/SuccessToast';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
-export function Contact() {
+function Contact() {
   const { showCelebration } = useToast();
   const [formData, setFormData] = useState({
     name: '',
@@ -87,33 +87,30 @@ export function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white">
+    <div className="min-h-screen bg-dark-navy pt-24 text-white relative overflow-hidden">
       {showConfetti && <ConfettiCelebration />}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-20 -left-24 h-96 w-96 rounded-full bg-gradient-to-br from-electric-blue to-soft-teal opacity-20 blur-3xl" />
+        <div className="absolute top-1/3 -right-24 h-80 w-80 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 opacity-20 blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 h-96 w-96 -translate-x-1/2 transform rounded-full bg-gradient-to-br from-emerald-green to-green-500 opacity-10 blur-3xl" />
+      </div>
       
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
         {/* Hero Section */}
         <motion.div 
-          className="text-center mb-12"
+          className="text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <motion.div
-            className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-electric-blue to-soft-teal flex items-center justify-center shadow-lg"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-          >
-            <MessageCircleHeart className="w-10 h-10 text-white" />
-          </motion.div>
-          
-          <h1 className="text-4xl md:text-5xl font-bold text-royal-purple mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Let's Connect!
           </h1>
-          <p className="text-xl text-charcoal leading-relaxed max-w-2xl mx-auto">
+          <p className="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto">
             Have questions, ideas, or just want to chat?
-            <span className="font-bold text-electric-blue"> We're here to help you reach your goals!</span>
+            <span className="font-bold text-bright-teal"> We're here to help you reach your goals!</span>
           </p>
-          <div className="flex items-center justify-center gap-6 mt-6 text-gray-600">
+          <div className="flex items-center justify-center gap-6 mt-6 text-white/70">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-electric-blue" />
               <span className="text-sm">Every message matters</span>
@@ -130,14 +127,13 @@ export function Contact() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mb-12"
         >
-          <div className="bg-gradient-to-r from-electric-blue/10 to-purple-500/10 border-2 border-electric-blue/20 rounded-xl p-6">
-            <div className="flex items-center gap-3">
-              <Heart className="w-6 h-6 text-electric-blue flex-shrink-0" />
-              <p className="text-gray-700 font-medium">
-                <span className="font-bold text-electric-blue">Don't hesitate!</span> Whether it's feedback, questions,
-                or just a hello—we genuinely want to hear from you. Your input shapes Networkly!
+          <div className="bg-white/10 border border-white/15 rounded-xl p-6 backdrop-blur">
+            <div className="flex items-center gap-3 text-white/80">
+              <Heart className="w-6 h-6 text-bright-teal flex-shrink-0" />
+              <p className="font-medium">
+                <span className="font-bold text-white">Don't hesitate!</span> Whether it's feedback, questions,
+                or just a hello, we genuinely want to hear from you. Your input shapes Networkly!
               </p>
             </div>
           </div>
@@ -153,7 +149,7 @@ export function Contact() {
         >
           <motion.div variants={fadeInUp}>
             <Card hover>
-              <div className="flex items-start gap-4">
+            <div className="flex items-start gap-4">
                 <motion.div 
                   className="p-4 bg-electric-blue bg-opacity-10 rounded-2xl"
                   whileHover={{ scale: 1.1, rotate: 5 }}
@@ -165,20 +161,20 @@ export function Contact() {
                   <h3 className="font-bold text-xl text-charcoal mb-2">Email Us Directly</h3>
                   <p className="text-gray-600 mb-4">For quick questions or feedback</p>
                   <div className="space-y-2">
-                    <a
-                      href="mailto:saatviksantosh10@gmail.com"
+                <a
+                  href="mailto:aarush.kadira@gmail.com"
                       className="block text-electric-blue hover:underline font-medium"
-                    >
-                      saatviksantosh10@gmail.com
-                    </a>
-                    <a
-                      href="mailto:aarush.kadira@gmail.com"
+                >
+                  aarush.kadira@gmail.com
+                </a>
+                <a
+                  href="mailto:joeljmanuel@gmail.com"
                       className="block text-electric-blue hover:underline font-medium"
-                    >
-                      aarush.kadira@gmail.com
-                    </a>
-                  </div>
-                </div>
+                >
+                  joeljmanuel@gmail.com
+                </a>
+              </div>
+            </div>
               </div>
             </Card>
           </motion.div>
@@ -222,10 +218,10 @@ export function Contact() {
             <div className="flex items-center gap-3 mb-6">
               <Sparkles className="w-6 h-6 text-electric-blue" />
               <h2 className="text-2xl font-bold text-charcoal">Send us a Message</h2>
-            </div>
+        </div>
 
             <AnimatePresence mode="wait">
-              {submitted ? (
+          {submitted ? (
                 <motion.div
                   key="success"
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -243,15 +239,15 @@ export function Contact() {
                   
                   <h3 className="text-2xl font-bold text-charcoal mb-3">
                     Message Sent! 🎉
-                  </h3>
+              </h3>
                   <p className="text-gray-600 mb-2">
                     Thanks for reaching out! We'll get back to you soon.
                   </p>
                   <p className="text-electric-blue font-medium">
                     Keep building your future! 🚀
-                  </p>
+              </p>
                 </motion.div>
-              ) : (
+          ) : (
                 <motion.form
                   key="form"
                   onSubmit={handleSubmit}
@@ -261,15 +257,15 @@ export function Contact() {
                 >
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <Input
-                        label="Your Name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
+                <Input
+                  label="Your Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                         onBlur={handleBlur}
-                        placeholder="John Doe"
-                        required
-                      />
+                  placeholder="John Doe"
+                  required
+                />
                       <AnimatePresence>
                         {errors.name && touchedFields.has('name') && (
                           <motion.div
@@ -296,16 +292,16 @@ export function Contact() {
                     </div>
 
                     <div>
-                      <Input
-                        label="Your Email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                <Input
+                  label="Your Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
                         onBlur={handleBlur}
-                        placeholder="you@example.com"
-                        required
-                      />
+                  placeholder="you@example.com"
+                  required
+                />
                       <AnimatePresence>
                         {errors.email && touchedFields.has('email') && (
                           <motion.div
@@ -330,18 +326,18 @@ export function Contact() {
                         )}
                       </AnimatePresence>
                     </div>
-                  </div>
+              </div>
 
                   <div>
-                    <Input
-                      label="Subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
+              <Input
+                label="Subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
                       onBlur={handleBlur}
-                      placeholder="What's this about?"
-                      required
-                    />
+                placeholder="What's this about?"
+                required
+              />
                     <AnimatePresence>
                       {errors.subject && touchedFields.has('subject') && (
                         <motion.div
@@ -367,21 +363,23 @@ export function Contact() {
                     </AnimatePresence>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-charcoal mb-1.5">
+              <div>
+                <label className="block text-sm font-medium text-charcoal mb-1.5">
                       Message <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                       onBlur={handleBlur}
                       placeholder="Tell us what's on your mind... We're excited to hear from you! 💬"
-                      required
-                      rows={6}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all duration-200
-                        focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent resize-none"
-                    />
+                  required
+                  rows={6}
+                      className="w-full px-4 py-3 border-2 border-electric-blue/30 rounded-lg transition-all duration-200
+                    bg-white text-charcoal placeholder:text-gray-400
+                    hover:border-electric-blue/50
+                    focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-electric-blue resize-none"
+                />
                     <AnimatePresence>
                       {errors.message && touchedFields.has('message') && (
                         <motion.div
@@ -408,13 +406,13 @@ export function Contact() {
                     <p className="text-sm text-gray-500 mt-2">
                       {formData.message.length}/500 characters
                     </p>
-                  </div>
+              </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button type="submit" className="flex-1">
-                      <Send className="w-4 h-4 mr-2" />
-                      Send Message
-                    </Button>
+                <Send className="w-4 h-4 mr-2" />
+                Send Message
+              </Button>
                     <motion.button
                       type="button"
                       onClick={() => {
@@ -422,7 +420,7 @@ export function Contact() {
                         setErrors({});
                         setTouchedFields(new Set());
                       }}
-                      className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                      className="px-6 py-3 border-2 border-electric-blue/30 text-charcoal rounded-lg font-medium hover:bg-electric-blue/5 hover:border-electric-blue/50 transition-colors"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -435,11 +433,13 @@ export function Contact() {
                     <p>We respect your privacy and will never share your information</p>
                   </div>
                 </motion.form>
-              )}
+          )}
             </AnimatePresence>
-          </Card>
+        </Card>
         </motion.div>
       </div>
     </div>
   );
 }
+
+export default Contact;

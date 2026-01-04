@@ -22,7 +22,7 @@ const opportunityTypes: { value: OpportunityType | 'all'; label: string }[] = [
 export function OpportunityTypeFilter({ selectedType, onSelectType, counts }: OpportunityTypeFilterProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold text-charcoal">Filter by Type</h3>
+      <h3 className="text-lg font-bold text-primary-900">Filter by Type</h3>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {opportunityTypes.map((type) => {
@@ -35,8 +35,8 @@ export function OpportunityTypeFilter({ selectedType, onSelectType, counts }: Op
               onClick={() => onSelectType(type.value)}
               className={`p-4 rounded-xl border-2 transition-all text-left ${
                 isActive
-                  ? 'border-electric-blue bg-electric-blue/5 shadow-md'
-                  : 'border-gray-200 hover:border-electric-blue bg-white'
+                  ? 'border-cta bg-cta/5 shadow-md'
+                  : 'border-gray-200 hover:border-cta bg-white'
               }`}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
@@ -51,7 +51,7 @@ export function OpportunityTypeFilter({ selectedType, onSelectType, counts }: Op
                   />
                 )}
                 <div className="flex-1">
-                  <div className="font-medium text-sm text-charcoal">
+                  <div className="font-medium text-sm text-primary-900">
                     {type.label}
                   </div>
                   {count > 0 && (
@@ -82,8 +82,8 @@ export function CompactTypeFilter({ selectedType, onSelectType }: Omit<Opportuni
             onClick={() => onSelectType(type.value)}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
               isActive
-                ? 'bg-electric-blue text-white shadow-md'
-                : 'bg-white text-charcoal border-2 border-gray-200 hover:border-electric-blue'
+                ? 'bg-cta text-white shadow-md'
+                : 'bg-white text-primary-900 border-2 border-gray-200 hover:border-cta'
             }`}
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}

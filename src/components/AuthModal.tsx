@@ -11,37 +11,92 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp, signInWithGoogle } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setMessage('');
 
-    const { error } = mode === 'signin'
-      ? await signIn(email, password)
-      : await signUp(email, password);
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      onClose();
-      setEmail('');
-      setPassword('');
+    if (!email.trim()) {
+      setError('Please enter an email address.');
+      return;
     }
+
+    if (!password.trim()) {
+      setError('Please enter a password.');
+      return;
+    }
+
+    if (mode === 'signup') {
+      if (!name.trim()) {
+        setError('Please enter your name.');
+        return;
+      }
+
+      if (password.trim().length < 8) {
+        setError('Use at least 8 characters for your password.');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        setError('Passwords do not match.');
+        return;
+      }
+    }
+
+    setLoading(true);
+    const normalizedEmail = email.trim().toLowerCase();
+    const sanitizedPassword = password.trim();
+
+    const { error: authError } =
+      mode === 'signin'
+        ? await signIn(normalizedEmail, sanitizedPassword)
+        : await signUp(normalizedEmail, sanitizedPassword, name.trim());
+
+    if (authError) {
+      // Handle specific error cases
+      if (authError.status === 403) {
+        setError('Please verify your email address before signing in.');
+      } else {
+        setError(authError.message || 'An error occurred. Please try again.');
+      }
+      setLoading(false);
+      return;
+    }
+
+    if (mode === 'signup') {
+      setMessage('Account created successfully! You can now sign in.');
+      setMode('signin');
+      setName('');
+      setPassword('');
+      setConfirmPassword('');
+      setLoading(false);
+      return;
+    }
+
+    onClose();
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setName('');
+    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
     setError('');
+    setMessage('');
     setLoading(true);
-    const { error } = await signInWithGoogle();
-    if (error) {
-      setError(error.message);
+    const { error: authError } = await signInWithGoogle();
+    if (authError) {
+      setError(authError.message);
       setLoading(false);
     }
   };
@@ -49,6 +104,16 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={mode === 'signin' ? 'Welcome Back' : 'Join Networkly'}>
       <form onSubmit={handleSubmit} className="space-y-4">
+        {mode === 'signup' && (
+          <Input
+            label="Name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your full name"
+            required
+          />
+        )}
         <Input
           label="Email"
           type="email"
@@ -65,9 +130,24 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           placeholder="••••••••"
           required
         />
+        {mode === 'signup' && (
+          <Input
+            label="Confirm Password"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Repeat your password"
+            required
+          />
+        )}
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
             {error}
+          </div>
+        )}
+        {message && (
+          <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-emerald-green">
+            {message}
           </div>
         )}
         <Button type="submit" className="w-full" disabled={loading}>
@@ -76,10 +156,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
+            <div className="w-full border-t border-neutral-300"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+            <span className="px-2 bg-white text-neutral-500">Or continue with</span>
           </div>
         </div>
 
@@ -117,6 +197,11 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             onClick={() => {
               setMode(mode === 'signin' ? 'signup' : 'signin');
               setError('');
+              setMessage('');
+              setName('');
+              setEmail('');
+              setPassword('');
+              setConfirmPassword('');
             }}
             className="text-electric-blue hover:underline font-medium"
           >

@@ -3,23 +3,19 @@ import { Search, Filter, Calendar, MapPin, ExternalLink, Bookmark, BookmarkCheck
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Card } from '../components/Card';
-import { Badge } from '../components/Badge';
-import { Button } from '../components/Button';
-import { Input } from '../components/Input';
-import { Tooltip } from '../components/Tooltip';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { useToast } from '../components/SuccessToast';
+import { InteractiveHoverButton } from '../components/ui/interactive-hover-button';
 import type { Database } from '../lib/database.types';
 
 type Opportunity = Database['public']['Tables']['opportunities']['Row'];
 type Application = Database['public']['Tables']['applications']['Row'];
 
-interface OpportunitiesProps {
+interface FeaturesProps {
   onAuthClick: () => void;
 }
 
-export function Opportunities({ onAuthClick }: OpportunitiesProps) {
+export default function Features({ onAuthClick }: FeaturesProps) {
   const { user } = useAuth();
   const { showCelebration } = useToast();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
@@ -70,8 +66,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://www.deca.org',
           interests: ['Business', 'Marketing', 'Leadership', 'Entrepreneurship'],
           created_at: new Date().toISOString(),
-          requirements: null,
-          compensation: null
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'public-2',
@@ -85,8 +82,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://hosa.org',
           interests: ['Healthcare', 'Medicine', 'Biology', 'Leadership'],
           created_at: new Date().toISOString(),
-          requirements: null,
-          compensation: null
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'public-3',
@@ -100,8 +98,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://intern.nasa.gov',
           interests: ['STEM', 'Space', 'Science', 'Engineering', 'Research'],
           created_at: new Date().toISOString(),
-          requirements: 'College-level student',
-          compensation: 'Paid internship'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'public-4',
@@ -115,8 +114,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://www.coca-colascholarsfoundation.org',
           interests: ['Academic Excellence', 'Leadership', 'Community Service'],
           created_at: new Date().toISOString(),
-          requirements: 'High school senior',
-          compensation: '$20,000 scholarship'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'public-5',
@@ -130,8 +130,25 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://www.societyforscience.org/isef/',
           interests: ['Science', 'Research', 'Engineering', 'STEM', 'Innovation'],
           created_at: new Date().toISOString(),
-          requirements: 'Original research project',
-          compensation: 'Awards and scholarships up to $75,000'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
+        },
+        {
+          id: 'public-6',
+          title: 'MIT Undergraduate Research Technology Conference (URTC)',
+          organization: 'MIT',
+          description: 'Present your research at MIT\'s premier undergraduate research technology conference. Showcase innovative projects, network with peers and faculty, and gain recognition for your work in technology and engineering.',
+          type: 'conference',
+          grade_levels: ['11', '12'],
+          deadline: '2026-02-15',
+          location: 'Cambridge, MA',
+          application_url: 'https://www.mit.edu',
+          interests: ['Research', 'Technology', 'STEM', 'Engineering', 'Innovation'],
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         }
       ];
       
@@ -166,8 +183,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://dukehealth.org/internships',
           interests: ['Biology', 'Medicine', 'Research'],
           created_at: new Date().toISOString(),
-          requirements: null,
-          compensation: 'Stipend provided'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'mock-2',
@@ -181,8 +199,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://nationalmerit.org',
           interests: ['Academic Excellence'],
           created_at: new Date().toISOString(),
-          requirements: 'PSAT/NMSQT score',
-          compensation: '$2,500 - Full tuition'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'mock-3',
@@ -196,8 +215,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://launch.mit.edu',
           interests: ['Entrepreneurship', 'Business', 'Technology'],
           created_at: new Date().toISOString(),
-          requirements: null,
-          compensation: 'Need-based financial aid available'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'mock-4',
@@ -211,8 +231,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://congressionalappchallenge.us',
           interests: ['Computer Science', 'Coding', 'Technology'],
           created_at: new Date().toISOString(),
-          requirements: null,
-          compensation: 'Recognition and prizes'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'mock-5',
@@ -226,8 +247,9 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://regeneron.com/sts',
           interests: ['Science', 'Research', 'STEM'],
           created_at: new Date().toISOString(),
-          requirements: 'Original research project',
-          compensation: 'Up to $250,000 in prizes'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         },
         {
           id: 'mock-6',
@@ -241,8 +263,25 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           application_url: 'https://nasa.gov/sees',
           interests: ['Science', 'Space', 'Environment'],
           created_at: new Date().toISOString(),
-          requirements: null,
-          compensation: 'Unpaid (academic credit available)'
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
+        },
+        {
+          id: 'mock-7',
+          title: 'MIT Undergraduate Research Technology Conference (URTC)',
+          organization: 'MIT',
+          description: 'Present your research at MIT\'s premier undergraduate research technology conference. Showcase innovative projects, network with peers and faculty, and gain recognition for your work in technology and engineering.',
+          type: 'conference',
+          grade_levels: ['11', '12'],
+          deadline: '2026-02-15',
+          location: 'Cambridge, MA',
+          application_url: 'https://www.mit.edu',
+          interests: ['Research', 'Technology', 'STEM', 'Engineering', 'Innovation'],
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          is_featured: false,
+          created_by: null
         }
       ];
       // Randomize mock opportunities
@@ -290,8 +329,8 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
         .insert({
           user_id: user.id,
           opportunity_id: opportunityId,
-          status: 'saved',
-        })
+          status: 'saved' as const,
+        } as any)
         .select()
         .single();
 
@@ -330,10 +369,23 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
       internship: 'from-blue-500 to-cyan-400',
       scholarship: 'from-emerald-500 to-teal-400',
       summer_program: 'from-purple-500 to-pink-400',
-      research: 'from-teal-500 to-blue-400',
+      research: 'from-indigo-500 to-violet-500',
       competition: 'from-orange-500 to-yellow-400',
+      conference: 'from-rose-500 to-pink-400',
     };
     return colors[type] || 'from-gray-500 to-gray-400';
+  };
+
+  const getTypeGradientStyle = (type: string) => {
+    const gradients: Record<string, string> = {
+      internship: 'linear-gradient(to right, #3B82F6, #22D3EE)', // Blue to Cyan
+      scholarship: 'linear-gradient(to right, #10B981, #2DD4BF)', // Emerald to Teal
+      summer_program: 'linear-gradient(to right, #A855F7, #F472B6)', // Purple to Pink
+      research: 'linear-gradient(to right, #6366F1, #8B5CF6)', // Indigo to Violet
+      competition: 'linear-gradient(to right, #F97316, #FACC15)', // Orange to Yellow
+      conference: 'linear-gradient(to right, #F43F5E, #F472B6)', // Rose to Pink
+    };
+    return gradients[type] || 'linear-gradient(to right, #6B7280, #9CA3AF)';
   };
 
   const getTypeIcon = (type: string) => {
@@ -343,6 +395,7 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
       summer_program: <GraduationCap className="w-5 h-5" />,
       research: <Beaker className="w-5 h-5" />,
       competition: <Trophy className="w-5 h-5" />,
+      conference: <Calendar className="w-5 h-5" />,
     };
     return icons[type] || <Sparkles className="w-5 h-5" />;
   };
@@ -354,6 +407,7 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
     { value: 'summer_program', label: 'Summer Programs', icon: <GraduationCap className="w-4 h-4" /> },
     { value: 'research', label: 'Research', icon: <Beaker className="w-4 h-4" /> },
     { value: 'competition', label: 'Competitions', icon: <Trophy className="w-4 h-4" /> },
+    { value: 'conference', label: 'Conferences', icon: <Calendar className="w-4 h-4" /> },
   ];
 
   const getGradeLabel = (grade: string) => {
@@ -372,14 +426,14 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-dark-navy via-deep-blue to-royal-blue flex items-center justify-center">
+      <div className="min-h-screen bg-dark-navy flex items-center justify-center">
         <LoadingSpinner size="lg" message="Loading opportunities..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-navy via-deep-blue to-royal-blue pt-24 relative overflow-hidden">
+    <div className="min-h-screen bg-dark-navy pt-24 relative overflow-hidden">
       {/* Animated background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-bright-teal to-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -388,13 +442,13 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
-        <motion.div 
+            <motion.div
           className="mb-8 text-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div
             className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-2 mb-4 border border-white/20"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -410,12 +464,12 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
           <p className="text-xl text-white max-w-3xl mx-auto">
             Discover internships, scholarships, programs, and competitions tailored for high schoolers.
           </p>
-        </motion.div>
+              </motion.div>
 
-        <motion.div 
+              <motion.div
           className="mb-8 space-y-4 max-w-4xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
           <div className="relative">
@@ -519,10 +573,10 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
               )}
             </div>
           </div>
-        </motion.div>
+              </motion.div>
 
         {filteredOpportunities.length === 0 ? (
-          <motion.div 
+              <motion.div
             className="text-center py-12 px-6 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -534,8 +588,8 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
             </p>
             <p className="text-blue-200 mt-2">
               Try adjusting your filters or search query.
-            </p>
-          </motion.div>
+                </p>
+              </motion.div>
         ) : (
           <motion.div 
             className="grid gap-6"
@@ -575,9 +629,16 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
                   </button>
 
                   {/* Type badge with icon - top left */}
-                  <div className="absolute -top-3 -left-3">
-                    <div className={`flex items-center gap-2 px-4 py-2 bg-gradient-to-r ${getTypeColor(opp.type)} rounded-full shadow-lg`}>
-                      {getTypeIcon(opp.type)}
+                  <div className="absolute -top-3 -left-3 z-10">
+                    <div 
+                      className="flex items-center gap-2 px-4 py-2 rounded-full shadow-lg"
+                      style={{
+                        background: getTypeGradientStyle(opp.type),
+                      }}
+                    >
+                      <span className="text-white">
+                        {getTypeIcon(opp.type)}
+                      </span>
                       <span className="text-white font-semibold text-sm capitalize">
                         {opp.type.replace('_', ' ')}
                       </span>
@@ -587,7 +648,7 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
                     <div className="mt-8 mb-4">
                       <h3 className="text-2xl font-bold text-white mb-2 line-clamp-2">
                         {opp.title}
-                      </h3>
+                    </h3>
                       <p className="text-bright-teal font-semibold text-lg">
                         {opp.organization}
                       </p>
@@ -649,12 +710,32 @@ export function Opportunities({ onAuthClick }: OpportunitiesProps) {
                         <span>Apply Now</span>
                         <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </motion.button>
-                    </div>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </motion.div>
         )}
+
+        {/* Sign-up CTA Section */}
+        <motion.div
+          className="mt-16 text-center py-12 px-6 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Find More Opportunities
+          </h2>
+          <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+            Sign up for Networkly to discover thousands more opportunities, get personalized recommendations, and never miss a deadline.
+          </p>
+          <InteractiveHoverButton
+            text="Sign Up to Find More Opportunities"
+            onClick={onAuthClick}
+            className="text-lg px-8 py-4"
+                      />
+                    </motion.div>
       </div>
     </div>
   );

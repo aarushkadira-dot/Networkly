@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Briefcase, DollarSign, GraduationCap, Microscope, Trophy, BookOpen, Users, Building } from 'lucide-react';
+import { Briefcase, DollarSign, GraduationCap, Microscope, Trophy, Users } from 'lucide-react';
 
 type OpportunityType = 'internship' | 'scholarship' | 'summer_program' | 'research' | 'competition' | 'volunteering';
 
@@ -227,10 +227,11 @@ export function OrganizationLogo({ name, imageUrl, size = 'md' }: OrganizationLo
       whileHover={{ scale: 1.05, rotate: 5 }}
       transition={{ type: 'spring', stiffness: 400 }}
     >
-      <Building className="w-1/2 h-1/2 text-white" />
+      <span className="font-semibold text-white tracking-wide">
+        {initials}
+      </span>
     </motion.div>
   );
 }
-
 
 

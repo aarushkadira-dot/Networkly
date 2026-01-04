@@ -13,10 +13,10 @@ const statusConfig = {
   saved: {
     icon: Bookmark,
     label: 'Saved',
-    color: 'text-electric-blue',
-    bgColor: 'bg-blue-100',
-    borderColor: 'border-blue-300',
-    gradient: 'from-blue-500 to-blue-600'
+    color: 'text-accent',
+    bgColor: 'bg-accent-100',
+    borderColor: 'border-accent-300',
+    gradient: 'from-accent to-accent-600'
   },
   applied: {
     icon: Send,
@@ -32,15 +32,15 @@ const statusConfig = {
     color: 'text-emerald-700',
     bgColor: 'bg-green-100',
     borderColor: 'border-green-300',
-    gradient: 'from-emerald-500 to-green-600'
+    gradient: 'from-accent to-accent-600'
   },
   rejected: {
     icon: XCircle,
     label: 'Rejected',
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100',
-    borderColor: 'border-gray-300',
-    gradient: 'from-gray-500 to-gray-600'
+    color: 'text-neutral-600',
+    bgColor: 'bg-neutral-100',
+    borderColor: 'border-neutral-300',
+    gradient: 'from-neutral-500 to-neutral-600'
   },
   pending: {
     icon: Clock,

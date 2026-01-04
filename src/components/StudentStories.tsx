@@ -10,9 +10,9 @@ const studentStories = [
     story: "Networkly helped me find a summer internship at a tech startup. I learned so much about software development and made amazing connections!",
     achievement: "Software Engineering Intern at TechCorp",
     icon: Code,
-    avatarColor: "from-electric-blue to-soft-teal",
+    avatarColor: "from-cta to-accent-teal",
     tags: ["Technology", "Internship"],
-    color: "from-electric-blue to-soft-teal"
+    color: "from-cta to-accent-teal"
   },
   {
     name: "Marcus Johnson",
@@ -21,9 +21,9 @@ const studentStories = [
     story: "I discovered a scholarship I never knew existed through Networkly. It covered my summer program costs completely!",
     achievement: "$5,000 STEM Scholarship Winner",
     icon: GraduationCap,
-    avatarColor: "from-emerald-green to-green-500",
+    avatarColor: "from-accent-lime to-green-500",
     tags: ["Scholarship", "STEM"],
-    color: "from-emerald-green to-green-500"
+    color: "from-accent-lime to-green-500"
   },
   {
     name: "Priya Patel",
@@ -43,9 +43,9 @@ const studentStories = [
     story: "Networkly's opportunities helped me build a portfolio that got me into my dream college's early admission program!",
     achievement: "Accepted to MIT Early Action",
     icon: Rocket,
-    avatarColor: "from-coral-peach to-orange-500",
+    avatarColor: "from-accent-coral to-orange-500",
     tags: ["College", "Success"],
-    color: "from-coral-peach to-orange-500"
+    color: "from-accent-coral to-orange-500"
   },
 ];
 
@@ -73,7 +73,7 @@ export function StudentStories() {
       >
         <div className="flex items-center justify-center gap-3 mb-3">
           <Star className="w-10 h-10 text-yellow-500 fill-yellow-500" />
-          <h2 className="text-3xl md:text-4xl font-bold text-royal-purple">
+          <h2 className="text-3xl md:text-4xl font-bold text-accent-violet">
             Success Stories
           </h2>
         </div>
@@ -192,21 +192,21 @@ const didYouKnowFacts = [
     icon: Target,
     fact: "70% of students find opportunities they love within their first week!",
     tip: "Start exploring today!",
-    color: "text-electric-blue",
+    color: "text-cta",
     bgColor: "bg-blue-100"
   },
   {
     icon: TrendingUp,
     fact: "Internships increase college admission chances by 40%!",
     tip: "Build experience early!",
-    color: "text-emerald-green",
+    color: "text-accent-lime",
     bgColor: "bg-green-100"
   },
   {
     icon: Award,
     fact: "Most scholarships go unclaimed because students don't apply!",
     tip: "Don't leave money on the table!",
-    color: "text-coral-peach",
+    color: "text-accent-coral",
     bgColor: "bg-orange-100"
   },
   {
@@ -249,15 +249,15 @@ export function DidYouKnow() {
         
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <BookOpen className="w-5 h-5 text-royal-purple" />
-            <h3 className="text-royal-purple font-bold text-lg">
+            <BookOpen className="w-5 h-5 text-accent-violet" />
+            <h3 className="text-accent-violet font-bold text-lg">
               Did You Know?
             </h3>
           </div>
           
           <motion.p
             key={currentFact}
-            className="text-charcoal font-medium mb-2"
+            className="text-primary-900 font-medium mb-2"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}

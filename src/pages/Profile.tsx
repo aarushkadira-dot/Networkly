@@ -13,7 +13,7 @@ import { fadeInUp, staggerContainer } from '../lib/animations';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
-export function Profile() {
+function Profile() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [editing, setEditing] = useState(false);
@@ -107,14 +107,14 @@ export function Profile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white flex items-center justify-center">
+      <div className="min-h-screen bg-dark-navy flex items-center justify-center">
         <LoadingSpinner size="lg" message="Loading profile..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white">
+    <div className="min-h-screen bg-dark-navy text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div 
           className="flex justify-between items-center mb-8"
@@ -155,7 +155,7 @@ export function Profile() {
         </motion.div>
 
         <AnimatePresence mode="wait">
-          {editing ? (
+        {editing ? (
             <motion.div 
               className="space-y-6"
               key="editing"
@@ -165,7 +165,7 @@ export function Profile() {
               transition={{ duration: 0.3 }}
             >
             <Card>
-              <h2 className="text-xl font-bold text-charcoal mb-4">Basic Information</h2>
+              <h2 className="text-xl font-bold text-white mb-4">Basic Information</h2>
               <div className="space-y-4">
                 <Input
                   label="Full Name"
@@ -180,7 +180,7 @@ export function Profile() {
                   placeholder="Your high school"
                 />
                 <div>
-                  <label className="block text-sm font-medium text-charcoal mb-1.5">
+                  <label className="block text-sm font-medium text-white mb-1.5">
                     Grade Level
                   </label>
                   <select
@@ -203,7 +203,7 @@ export function Profile() {
                   placeholder="City, State"
                 />
                 <div>
-                  <label className="block text-sm font-medium text-charcoal mb-1.5">
+                  <label className="block text-sm font-medium text-white mb-1.5">
                     Bio
                   </label>
                   <textarea
@@ -281,14 +281,14 @@ export function Profile() {
             animate="visible"
           >
             <motion.div variants={fadeInUp}>
-              <Card>
-                <div className="flex items-start gap-6">
+            <Card>
+              <div className="flex items-start gap-6">
                   <motion.div 
                     className="w-24 h-24 bg-gradient-to-br from-electric-blue to-soft-teal rounded-full flex items-center justify-center flex-shrink-0"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     transition={{ type: 'spring', stiffness: 300 }}
                   >
-                    <User className="w-12 h-12 text-white" />
+                  <User className="w-12 h-12 text-white" />
                   </motion.div>
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-charcoal mb-2">
@@ -324,7 +324,7 @@ export function Profile() {
 
             {profile?.interests && profile.interests.length > 0 && (
               <motion.div variants={fadeInUp}>
-                <Card>
+              <Card>
                 <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
                   <Briefcase className="w-5 h-5 text-electric-blue" />
                   Interests
@@ -340,7 +340,7 @@ export function Profile() {
 
             {profile?.skills && profile.skills.length > 0 && (
               <motion.div variants={fadeInUp}>
-                <Card>
+              <Card>
                 <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
                   <Code className="w-5 h-5 text-emerald-green" />
                   Skills
@@ -356,7 +356,7 @@ export function Profile() {
 
             {profile?.achievements && profile.achievements.length > 0 && (
               <motion.div variants={fadeInUp}>
-                <Card>
+              <Card>
                 <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
                   <Award className="w-5 h-5 text-coral-peach" />
                   Achievements
@@ -375,7 +375,7 @@ export function Profile() {
 
             {profile?.projects && profile.projects.length > 0 && (
               <motion.div variants={fadeInUp}>
-                <Card>
+              <Card>
                 <h3 className="text-lg font-bold text-charcoal mb-3">Projects</h3>
                 <ul className="space-y-2">
                   {profile.projects.map((project, index) => (
@@ -391,11 +391,11 @@ export function Profile() {
 
             {!profile?.full_name && (
               <motion.div variants={fadeInUp}>
-                <Card className="bg-warm-beige border-2 border-coral-peach">
-                  <p className="text-charcoal text-center">
-                    Complete your profile to start applying for opportunities!
-                  </p>
-                </Card>
+              <Card className="bg-warm-beige border-2 border-coral-peach">
+                <p className="text-charcoal text-center">
+                  Complete your profile to start applying for opportunities!
+                </p>
+              </Card>
               </motion.div>
             )}
           </motion.div>

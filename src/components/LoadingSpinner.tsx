@@ -17,7 +17,7 @@ export function LoadingSpinner({ size = 'md', message }: LoadingSpinnerProps) {
       <div className={`relative ${sizes[size]}`}>
         {/* Outer ring */}
         <motion.div
-          className="absolute inset-0 border-4 border-electric-blue/20 rounded-full"
+          className="absolute inset-0 border-4 border-cta/20 rounded-full"
           animate={{ rotate: 360 }}
           transition={{
             duration: 1.5,
@@ -28,7 +28,7 @@ export function LoadingSpinner({ size = 'md', message }: LoadingSpinnerProps) {
         
         {/* Spinning gradient ring */}
         <motion.div
-          className="absolute inset-0 border-4 border-transparent border-t-electric-blue border-r-soft-teal rounded-full"
+          className="absolute inset-0 border-4 border-transparent border-t-cta border-r-accent-teal rounded-full"
           animate={{ rotate: 360 }}
           transition={{
             duration: 1,
@@ -39,7 +39,7 @@ export function LoadingSpinner({ size = 'md', message }: LoadingSpinnerProps) {
 
         {/* Inner pulsing dot */}
         <motion.div
-          className="absolute inset-0 m-auto w-3 h-3 bg-electric-blue rounded-full"
+          className="absolute inset-0 m-auto w-3 h-3 bg-cta rounded-full"
           animate={{
             scale: [1, 1.5, 1],
             opacity: [1, 0.5, 1],
@@ -54,7 +54,7 @@ export function LoadingSpinner({ size = 'md', message }: LoadingSpinnerProps) {
 
       {message && (
         <motion.p
-          className="text-charcoal text-center"
+          className="text-primary-900 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -137,7 +137,7 @@ export function LoadingDots() {
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
-          className="w-2 h-2 bg-electric-blue rounded-full"
+          className="w-2 h-2 bg-cta rounded-full"
           animate={{
             y: [0, -8, 0],
             opacity: [1, 0.5, 1],
@@ -165,7 +165,7 @@ export function ProgressBar({ progress, showPercentage = true }: ProgressBarProp
     <div className="w-full space-y-2">
       <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-gradient-to-r from-electric-blue to-soft-teal"
+          className="h-full bg-gradient-to-r from-cta to-accent-teal"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -173,7 +173,7 @@ export function ProgressBar({ progress, showPercentage = true }: ProgressBarProp
       </div>
       {showPercentage && (
         <motion.div
-          className="text-sm text-charcoal text-right font-medium"
+          className="text-sm text-primary-900 text-right font-medium"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >

@@ -35,28 +35,10 @@ export function Logo({ className = "" }: { className?: string }) {
         </div>
       </div>
       
-      {/* Networkly text with stylized N and w */}
+      {/* Networkly text */}
       <div className="text-[#3B60A8] font-bold text-2xl">
         <span className="relative">
-          {/* Stylized N with extended stroke */}
-          <span className="relative inline-block">
-            N
-            <svg 
-              className="absolute -bottom-1 -right-1" 
-              width="8" 
-              height="12" 
-              viewBox="0 0 8 12" 
-              fill="none"
-            >
-              <path 
-                d="M0 0L2 2L4 4L6 6L8 8" 
-                stroke="#3B60A8" 
-                strokeWidth="1.5" 
-                strokeLinecap="round"
-              />
-            </svg>
-          </span>
-          etworkly
+          Networkly
         </span>
       </div>
     </div>

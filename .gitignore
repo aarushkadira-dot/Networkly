@@ -21,3 +21,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Backup files and directories
+*.save
+networkly copy/

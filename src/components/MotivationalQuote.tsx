@@ -161,7 +161,7 @@ export function MotivationalQuote({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            — {currentQuote.author}
+            {currentQuote.author}
           </motion.p>
 
           {/* Progress dots */}

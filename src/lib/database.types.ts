@@ -66,7 +66,7 @@ export interface Database {
         Row: {
           id: string
           title: string
-          type: 'internship' | 'scholarship' | 'summer_program' | 'research' | 'competition'
+          type: 'internship' | 'scholarship' | 'summer_program' | 'research' | 'competition' | 'conference'
           description: string
           organization: string
           location: string | null
@@ -82,7 +82,7 @@ export interface Database {
         Insert: {
           id?: string
           title: string
-          type: 'internship' | 'scholarship' | 'summer_program' | 'research' | 'competition'
+          type: 'internship' | 'scholarship' | 'summer_program' | 'research' | 'competition' | 'conference'
           description: string
           organization: string
           location?: string | null
@@ -98,7 +98,7 @@ export interface Database {
         Update: {
           id?: string
           title?: string
-          type?: 'internship' | 'scholarship' | 'summer_program' | 'research' | 'competition'
+          type?: 'internship' | 'scholarship' | 'summer_program' | 'research' | 'competition' | 'conference'
           description?: string
           organization?: string
           location?: string | null

@@ -240,7 +240,7 @@ const interestFilters = [
   'Leadership'
 ];
 
-export function Students() {
+function Students() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [selectedStudent, setSelectedStudent] = useState<StudentProfile | null>(null);
@@ -269,7 +269,7 @@ export function Students() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <motion.div
@@ -289,41 +289,44 @@ export function Students() {
           </p>
         </motion.div>
 
-        {/* Search and Filters */}
+        {/* Search and Filters - Underneath the title */}
         <motion.div
           className="mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-            <div className="flex-1 max-w-md">
-              <Input
-                placeholder="Search students, schools, or interests..."
+          {/* Search Bar */}
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+              <input
+                type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full"
-                icon={Search}
+                placeholder="Search students..."
+                className="w-full pl-12 pr-4 py-3 bg-white border border-blue-200 rounded-lg text-neutral-700 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {interestFilters.map((filter) => (
-                <motion.button
-                  key={filter}
-                  onClick={() => setSelectedFilter(filter)}
-                  className={`px-4 py-2 rounded-lg font-inter font-medium transition-all duration-300 ${
-                    selectedFilter === filter
-                      ? 'bg-gradient-to-r from-blue to-teal text-white shadow-lg'
-                      : 'bg-white text-text-secondary border border-gray-200 hover:border-blue hover:text-blue'
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {filter}
-                </motion.button>
-              ))}
-            </div>
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="flex flex-wrap gap-3">
+            {interestFilters.map((filter) => (
+              <motion.button
+                key={filter}
+                onClick={() => setSelectedFilter(filter)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                  selectedFilter === filter
+                    ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg'
+                    : 'bg-white text-neutral-700 hover:bg-neutral-50 border border-neutral-200'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {filter}
+              </motion.button>
+            ))}
           </div>
         </motion.div>
 
@@ -465,4 +468,5 @@ export function Students() {
   );
 }
 
+export default Students;
 

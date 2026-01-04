@@ -8,7 +8,6 @@ import {
   Heart,
   Star,
   Send,
-  Download,
   Bell,
   Rocket,
   CheckCircle,
@@ -39,10 +38,10 @@ export function CTAButton({
   glow = false,
 }: CTAButtonProps) {
   const variants = {
-    primary: 'bg-electric-blue hover:bg-blue-600 text-white',
-    secondary: 'bg-emerald-green hover:bg-green-600 text-white',
-    success: 'bg-green-500 hover:bg-green-600 text-white',
-    gradient: 'bg-gradient-to-r from-electric-blue via-purple-500 to-pink-500 hover:shadow-2xl text-white',
+    primary: 'bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-600 text-white',
+    secondary: 'bg-secondary hover:bg-secondary-600 text-white',
+    success: 'bg-accent hover:bg-accent-600 text-white',
+    gradient: 'bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-600 hover:shadow-2xl text-white',
   };
 
   const sizes = {
@@ -101,8 +100,8 @@ export function ActionButton({ icon: Icon, label, onClick, active = false, count
       onClick={onClick}
       className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all ${
         active
-          ? 'bg-electric-blue text-white'
-          : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200'
+          ? 'bg-gradient-to-r from-primary to-secondary text-white'
+          : 'bg-white text-neutral-700 hover:bg-neutral-50 border-2 border-neutral-200'
       }`}
       whileHover={{ scale: 1.05, y: -2 }}
       whileTap={{ scale: 0.95 }}
@@ -116,7 +115,7 @@ export function ActionButton({ icon: Icon, label, onClick, active = false, count
       <span>{label}</span>
       {count !== undefined && (
         <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-          active ? 'bg-white/20' : 'bg-gray-100'
+          active ? 'bg-white/20' : 'bg-neutral-100'
         }`}>
           {count}
         </span>
@@ -135,9 +134,9 @@ export function FloatingActionButtons() {
       transition={{ duration: 0.5, staggerChildren: 0.1 }}
     >
       {[
-        { icon: Bell, label: 'Notifications', color: 'from-electric-blue to-soft-teal' },
-        { icon: Bookmark, label: 'Saved', color: 'from-emerald-green to-green-500' },
-        { icon: Share2, label: 'Share', color: 'from-purple-500 to-pink-500' },
+        { icon: Bell, label: 'Notifications', color: 'from-primary to-primary-600' },
+        { icon: Bookmark, label: 'Saved', color: 'from-accent to-accent-600' },
+        { icon: Share2, label: 'Share', color: 'from-secondary to-secondary-600' },
       ].map((action, index) => (
         <motion.button
           key={index}
@@ -151,7 +150,7 @@ export function FloatingActionButtons() {
           <action.icon className="w-6 h-6" />
           
           {/* Tooltip */}
-          <span className="absolute right-16 bg-charcoal text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          <span className="absolute right-16 bg-primary-900 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             {action.label}
           </span>
         </motion.button>
@@ -170,10 +169,10 @@ interface ShareModalProps {
 
 export function ShareModal({ isOpen, onClose, title, url = window.location.href }: ShareModalProps) {
   const shareOptions = [
-    { name: 'Copy Link', icon: ExternalLink, color: 'from-gray-500 to-gray-600' },
-    { name: 'Facebook', icon: Share2, color: 'from-blue-600 to-blue-700' },
+    { name: 'Copy Link', icon: ExternalLink, color: 'from-neutral-500 to-neutral-600' },
+    { name: 'Facebook', icon: Share2, color: 'from-primary-600 to-primary-700' },
     { name: 'Twitter', icon: Send, color: 'from-sky-400 to-sky-500' },
-    { name: 'Email', icon: Send, color: 'from-emerald-500 to-emerald-600' },
+    { name: 'Email', icon: Send, color: 'from-accent to-primary-700' },
   ];
 
   const handleShare = (platform: string) => {
@@ -205,7 +204,7 @@ export function ShareModal({ isOpen, onClose, title, url = window.location.href 
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
-          <div className="bg-gradient-to-r from-electric-blue to-soft-teal p-6">
+          <div className="bg-gradient-to-r from-primary to-primary-600 p-6">
             <h3 className="text-2xl font-bold text-white mb-2">Share with Friends!</h3>
             <p className="text-white/90 text-sm">{title}</p>
           </div>
@@ -243,24 +242,7 @@ export function MegaCTA() {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <div className="bg-gradient-to-br from-electric-blue via-purple-500 to-pink-500 p-12 relative">
-        {/* Animated background elements */}
-        <motion.div
-          className="absolute inset-0 opacity-20"
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%'],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-          style={{
-            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-            backgroundSize: '50px 50px',
-          }}
-        />
-
+      <div className="bg-gradient-to-br from-primary to-primary-700 p-12 relative">
         <div className="relative z-10 text-center">
           <motion.div
             className="w-24 h-24 mx-auto mb-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"

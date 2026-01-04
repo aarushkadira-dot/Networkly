@@ -19,12 +19,12 @@ export function Badge({
   onClick 
 }: BadgeProps) {
   const variants = {
-    blue: 'bg-blue-100 text-blue-700 hover:bg-blue-200',
-    green: 'bg-green-100 text-green-700 hover:bg-green-200',
+    blue: 'bg-primary-100 text-primary-700 hover:bg-primary-200',
+    green: 'bg-accent-100 text-accent-700 hover:bg-accent-200',
     purple: 'bg-purple-100 text-purple-700 hover:bg-purple-200',
-    teal: 'bg-teal-100 text-teal-700 hover:bg-teal-200',
+    teal: 'bg-secondary-100 text-secondary-700 hover:bg-secondary-200',
     peach: 'bg-orange-100 text-orange-700 hover:bg-orange-200',
-    gray: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+    gray: 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200',
   };
 
   const Component = animated ? motion.span : 'span';
@@ -33,7 +33,7 @@ export function Badge({
     animate: { scale: 1, opacity: 1 },
     whileHover: clickable ? { scale: 1.05, y: -2 } : { scale: 1.02 },
     whileTap: clickable ? { scale: 0.95 } : {},
-    transition: { type: 'spring', stiffness: 500, damping: 25 }
+    transition: { type: 'spring' as const, stiffness: 500, damping: 25 }
   } : {};
 
   return (

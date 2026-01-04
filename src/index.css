@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  .delay-700 {
+    animation-delay: 700ms;
+  }
+  .delay-1000 {
+    animation-delay: 1000ms;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer base {
+  :root {
+    --brand: 189 94% 43%;
+    --brand-foreground: 194 98% 59%;
+    --white: #ffffff;
+    --black: #000000;
+    --transparent: transparent;
+  }
+ 
+  .dark {
+    --brand: 194 98% 59%;
+    --brand-foreground: 189 94% 43%;
+    --white: #ffffff;
+    --black: #000000;
+    --transparent: transparent;
+  }
+}

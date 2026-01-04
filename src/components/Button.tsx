@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onAnimationStart'> {
   children: ReactNode;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
@@ -17,10 +17,10 @@ export function Button({
   const baseStyles = 'font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center';
 
   const variants = {
-    primary: 'bg-electric-blue text-white hover:bg-blue-600 shadow-soft',
-    secondary: 'bg-emerald-green text-white hover:bg-teal-600 shadow-soft',
-    outline: 'border-2 border-electric-blue text-electric-blue hover:bg-electric-blue hover:text-white',
-    ghost: 'text-electric-blue hover:bg-blue-50',
+    primary: 'bg-gradient-to-r from-primary to-secondary text-white hover:from-primary-600 hover:to-secondary-600 shadow-soft',
+    secondary: 'bg-secondary text-white hover:bg-secondary-600 shadow-soft',
+    outline: 'border-2 border-primary text-primary hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white',
+    ghost: 'text-primary hover:bg-primary-50',
   };
 
   const sizes = {
@@ -37,8 +37,8 @@ export function Button({
         boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)'
       }}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2, ease: 'easeInOut' }}
-      {...props}
+      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+      {...(props as HTMLMotionProps<'button'>)}
     >
       {children}
     </motion.button>

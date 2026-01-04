@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
-import { Briefcase, Award, Users, TrendingUp, Star, Rocket } from 'lucide-react';
+import { Briefcase, Award, Users, TrendingUp } from 'lucide-react';
 
 interface AnimatedCounterProps {
   end: number;
@@ -84,7 +84,7 @@ export function StatCard({ icon: Icon, label, value, prefix, suffix, color, grad
           <AnimatedCounter end={value} prefix={prefix} suffix={suffix} />
         </motion.div>
 
-        <p className="text-gray-600 font-medium">{label}</p>
+        <p className="text-neutral-600 font-medium">{label}</p>
       </div>
     </motion.div>
   );
@@ -96,16 +96,16 @@ export function StatsSection() {
       icon: Briefcase,
       label: 'Active Opportunities',
       value: 1247,
-      color: 'text-electric-blue',
-      gradient: 'from-electric-blue to-soft-teal',
+      color: 'text-primary',
+      gradient: 'from-primary to-secondary',
       suffix: '+'
     },
     {
       icon: Award,
       label: 'Scholarships Available',
       value: 356,
-      color: 'text-emerald-green',
-      gradient: 'from-emerald-green to-green-500',
+      color: 'text-accent',
+      gradient: 'from-accent to-accent-600',
       suffix: '+'
     },
     {
@@ -120,8 +120,8 @@ export function StatsSection() {
       icon: TrendingUp,
       label: 'Success Rate',
       value: 94,
-      color: 'text-coral-peach',
-      gradient: 'from-coral-peach to-orange-500',
+      color: 'text-accent-coral',
+      gradient: 'from-accent-coral to-orange-500',
       suffix: '%'
     },
   ];
@@ -203,7 +203,7 @@ export function ProgressRing({
             animate={{ scale: 1 }}
             transition={{ delay: 0.5, type: 'spring' }}
           >
-            <div className="text-3xl font-bold text-charcoal">
+            <div className="text-3xl font-bold text-primary-900">
               {Math.round(progress)}%
             </div>
           </motion.div>
@@ -212,7 +212,7 @@ export function ProgressRing({
       
       {label && (
         <motion.p
-          className="mt-4 text-sm font-medium text-gray-600 text-center"
+          className="mt-4 text-sm font-medium text-neutral-600 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}

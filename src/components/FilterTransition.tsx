@@ -33,8 +33,8 @@ export function FilterTag({ label, active, onClick, count }: FilterTagProps) {
       onClick={onClick}
       className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
         active
-          ? 'bg-electric-blue text-white shadow-md'
-          : 'bg-white text-charcoal border-2 border-gray-200 hover:border-electric-blue'
+          ? 'bg-cta text-white shadow-md'
+          : 'bg-white text-primary-900 border-2 border-gray-200 hover:border-cta'
       }`}
       whileHover={{ scale: 1.05, y: -2 }}
       whileTap={{ scale: 0.95 }}
@@ -70,7 +70,7 @@ interface FilterChipProps {
 export function FilterChip({ label, onRemove }: FilterChipProps) {
   return (
     <motion.div
-      className="inline-flex items-center gap-2 px-3 py-1.5 bg-electric-blue/10 text-electric-blue rounded-full text-sm font-medium"
+      className="inline-flex items-center gap-2 px-3 py-1.5 bg-cta/10 text-cta rounded-full text-sm font-medium"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0, opacity: 0 }}
@@ -80,7 +80,7 @@ export function FilterChip({ label, onRemove }: FilterChipProps) {
       <span>{label}</span>
       <motion.button
         onClick={onRemove}
-        className="w-4 h-4 flex items-center justify-center hover:bg-electric-blue/20 rounded-full transition-colors"
+        className="w-4 h-4 flex items-center justify-center hover:bg-cta/20 rounded-full transition-colors"
         whileHover={{ scale: 1.2, rotate: 90 }}
         whileTap={{ scale: 0.9 }}
       >

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, Star, Sparkles, TrendingUp, Heart, X, Trophy, Rocket } from 'lucide-react';
+import { CheckCircle, Star, Sparkles, X, Trophy, Rocket } from 'lucide-react';
 
 interface Toast {
   id: number;
@@ -30,8 +30,8 @@ const celebrationMessages = [
 const toastConfig = {
   success: {
     icon: CheckCircle,
-    gradient: 'from-emerald-500 to-green-500',
-    borderColor: 'border-emerald-500'
+    gradient: 'from-accent to-accent-600',
+    borderColor: 'border-accent'
   },
   celebration: {
     icon: Star,
@@ -115,18 +115,18 @@ function ToastContainer({ toasts, onClose }: { toasts: Toast[], onClose: (id: nu
                 </motion.div>
                 
                 <div className="flex-1 pt-1">
-                  <p className="text-charcoal font-medium text-sm leading-relaxed">
+                  <p className="text-primary-900 font-medium text-sm leading-relaxed">
                     {toast.message}
                   </p>
                 </div>
 
                 <motion.button
                   onClick={() => onClose(toast.id)}
-                  className="flex-shrink-0 p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="flex-shrink-0 p-1 hover:bg-neutral-100 rounded-lg transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <X className="w-4 h-4 text-gray-500" />
+                  <X className="w-4 h-4 text-neutral-500" />
                 </motion.button>
               </div>
 
@@ -148,11 +148,11 @@ function ToastContainer({ toasts, onClose }: { toasts: Toast[], onClose: (id: nu
 // Confetti effect for major celebrations
 export function ConfettiCelebration() {
   const confettiColors = [
-    'bg-electric-blue',
-    'bg-emerald-green',
-    'bg-coral-peach',
+    'bg-primary',
+    'bg-accent',
+    'bg-accent-coral',
     'bg-royal-purple',
-    'bg-soft-teal',
+    'bg-secondary',
     'bg-yellow-400',
     'bg-pink-500'
   ];
@@ -213,7 +213,7 @@ export function CelebrationModal({
   const iconConfig = {
     star: { icon: Star, color: 'from-yellow-400 to-yellow-500' },
     trophy: { icon: Trophy, color: 'from-yellow-500 to-orange-500' },
-    rocket: { icon: Rocket, color: 'from-electric-blue to-purple-500' }
+    rocket: { icon: Rocket, color: 'from-primary to-purple-500' }
   };
 
   const selectedIcon = iconConfig[iconType];
@@ -269,13 +269,13 @@ export function CelebrationModal({
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                <p className="text-charcoal text-lg mb-6 leading-relaxed">
+                <p className="text-primary-900 text-lg mb-6 leading-relaxed">
                   {message}
                 </p>
 
                 <motion.button
                   onClick={onClose}
-                  className="bg-gradient-to-r from-electric-blue to-soft-teal text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 mx-auto"
+                  className="bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 mx-auto"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

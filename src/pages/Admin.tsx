@@ -14,7 +14,7 @@ import { fadeInUp, staggerContainer } from '../lib/animations';
 
 type Opportunity = Database['public']['Tables']['opportunities']['Row'];
 
-export function Admin() {
+function Admin() {
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
@@ -163,14 +163,14 @@ export function Admin() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white flex items-center justify-center">
+      <div className="min-h-screen bg-dark-navy flex items-center justify-center">
         <LoadingSpinner size="lg" message="Loading admin panel..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white">
+    <div className="min-h-screen bg-dark-navy text-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div 
           className="flex justify-between items-center mb-8"
@@ -190,16 +190,16 @@ export function Admin() {
         </motion.div>
 
         <AnimatePresence>
-          {(creating || editingId) && (
+        {(creating || editingId) && (
             <motion.div
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
               animate={{ opacity: 1, height: 'auto', marginBottom: 32 }}
               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
             >
-              <Card className="mb-8">
+          <Card className="mb-8">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-charcoal">
+              <h2 className="text-2xl font-bold text-white">
                 {editingId ? 'Edit Opportunity' : 'Create New Opportunity'}
               </h2>
               <button onClick={resetForm} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -217,7 +217,7 @@ export function Admin() {
               />
 
               <div>
-                <label className="block text-sm font-medium text-charcoal mb-1.5">
+                <label className="block text-sm font-medium text-white mb-1.5">
                   Type
                 </label>
                 <select
@@ -243,7 +243,7 @@ export function Admin() {
               />
 
               <div>
-                <label className="block text-sm font-medium text-charcoal mb-1.5">
+                <label className="block text-sm font-medium text-white mb-1.5">
                   Description
                 </label>
                 <textarea
@@ -341,7 +341,7 @@ export function Admin() {
             </div>
           </Card>
             </motion.div>
-          )}
+        )}
         </AnimatePresence>
 
         <motion.div 

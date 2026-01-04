@@ -29,11 +29,11 @@ export function Modal({ isOpen, onClose, children, title }: ModalProps) {
         onClick={onClose}
       />
       <div className="relative bg-white rounded-2xl shadow-lifted max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-          {title && <h2 className="text-xl font-bold text-charcoal">{title}</h2>}
+        <div className="sticky top-0 bg-white border-b border-neutral-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+          {title && <h2 className="text-xl font-bold text-primary-900">{title}</h2>}
           <button
             onClick={onClose}
-            className="ml-auto p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+            className="ml-auto p-1.5 hover:bg-neutral-100 rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>

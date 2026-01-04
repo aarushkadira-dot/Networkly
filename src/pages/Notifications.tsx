@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 type Notification = Database['public']['Tables']['notifications']['Row'];
 
-export function Notifications() {
+function Notifications() {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -86,7 +86,7 @@ export function Notifications() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white flex items-center justify-center">
+      <div className="min-h-screen bg-dark-navy flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-electric-blue border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-charcoal">Loading notifications...</p>
@@ -96,7 +96,7 @@ export function Notifications() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-warm-beige to-white">
+    <div className="min-h-screen bg-dark-navy text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -192,3 +192,5 @@ export function Notifications() {
     </div>
   );
 }
+
+export default Notifications;

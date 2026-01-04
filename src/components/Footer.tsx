@@ -1,182 +1,161 @@
-import { Link } from 'react-router-dom';
-import { Mail, Linkedin, Github, Heart } from 'lucide-react';
-import { motion } from 'framer-motion';
+"use client";
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Github,
+  Twitter,
+  Heart,
+} from "lucide-react";
+import { FooterBackgroundGradient } from "./ui/hover-footer";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const footerLinks = {
-    product: [
-      { name: 'Opportunities', path: '/opportunities' },
-      { name: 'Student Profiles', path: '/profile' },
-      { name: 'About Us', path: '/about' },
-      { name: 'Team', path: '/team' },
-    ],
-    support: [
-      { name: 'Contact', path: '/contact' },
-      { name: 'Help Center', path: '/help' },
-      { name: 'Privacy Policy', path: '/privacy' },
-      { name: 'Terms of Service', path: '/terms' },
-    ],
-  };
+  // Footer link data
+  const footerLinks = [
+    {
+      title: "Product",
+      links: [
+        { label: "Opportunities", href: "/features" },
+        { label: "About Us", href: "/about" },
+        { label: "Student Profiles", href: "/profile" },
+      ],
+    },
+    {
+      title: "Support",
+      links: [
+        { label: "Contact", href: "/contact" },
+        { label: "Help Center", href: "/help" },
+        { label: "Privacy Policy", href: "/privacy" },
+        { label: "Terms of Service", href: "/terms" },
+      ],
+    },
+  ];
 
+  // Contact info data
+  const contactInfo = [
+    {
+      icon: <Mail size={18} className="text-primary" />,
+      text: "hello@networkly.com",
+      href: "mailto:hello@networkly.com",
+    },
+    {
+      icon: <Phone size={18} className="text-primary" />,
+      text: "+1 (555) 123-4567",
+      href: "tel:+15551234567",
+    },
+    {
+      icon: <MapPin size={18} className="text-primary" />,
+      text: "United States",
+    },
+  ];
+
+  // Social media icons
   const socialLinks = [
-    { icon: Mail, href: 'mailto:hello@networkly.com', label: 'Email' },
-    { icon: Linkedin, href: 'https://linkedin.com/company/networkly', label: 'LinkedIn' },
-    { icon: Github, href: 'https://github.com/networkly', label: 'GitHub' },
+    { icon: <Linkedin size={20} />, label: "LinkedIn", href: "https://linkedin.com/company/networkly" },
+    { icon: <Github size={20} />, label: "GitHub", href: "https://github.com/networkly" },
+    { icon: <Twitter size={20} />, label: "Twitter", href: "https://twitter.com/networkly" },
   ];
 
   return (
-    <footer className="bg-navy text-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand Section */}
-          <motion.div
-            className="md:col-span-1"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue to-teal rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-poppins font-bold text-lg">N</span>
-              </div>
-              <span className="text-xl font-poppins font-semibold">Networkly</span>
-            </div>
-            <p className="text-blue-200 leading-relaxed mb-6 font-inter">
-              Empowering Tomorrow's Leaders
-            </p>
-            <div className="flex items-center space-x-4">
-              {socialLinks.map((social, index) => {
-                const IconComponent = social.icon;
-                return (
-                  <motion.a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={social.label}
-                  >
-                    <IconComponent className="w-5 h-5" />
-                  </motion.a>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          {/* Product Links */}
-          <motion.div
-            className="md:col-span-1"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-          >
-            <h3 className="text-lg font-poppins font-semibold mb-4">Product</h3>
-            <ul className="space-y-3">
-              {footerLinks.product.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    to={link.path}
-                    className="text-blue-200 hover:text-white transition-colors duration-300 font-open-sans"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Support Links */}
-          <motion.div
-            className="md:col-span-1"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            <h3 className="text-lg font-poppins font-semibold mb-4">Support</h3>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    to={link.path}
-                    className="text-blue-200 hover:text-white transition-colors duration-300 font-open-sans"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Newsletter Signup */}
-          <motion.div
-            className="md:col-span-1"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-          >
-            <h3 className="text-lg font-poppins font-semibold mb-4">Stay Updated</h3>
-            <p className="text-blue-200 mb-4 font-inter">
-              Get the latest opportunities and updates delivered to your inbox.
-            </p>
-            <div className="flex flex-col space-y-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent transition-all duration-300"
+    <footer className="bg-dark-navy relative h-fit overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 py-10 md:px-8 md:py-12 z-40 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-8 lg:gap-12 pb-6">
+          {/* Brand section */}
+          <div className="flex flex-col space-y-4">
+            <div className="flex items-center space-x-2">
+              <img 
+                src="/assets/logos/networklylogo.png" 
+                alt="Networkly Logo" 
+                className="w-8 h-8 object-contain"
               />
-              <motion.button
-                className="px-4 py-2 bg-gradient-to-r from-blue to-teal hover:from-blue-600 hover:to-teal-600 text-white rounded-lg font-inter font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Subscribe
-              </motion.button>
+              <span className="text-white text-2xl font-bold">Networkly</span>
             </div>
-          </motion.div>
+            <p className="text-sm leading-relaxed text-white/70">
+              Empowering Tomorrow's Leaders. Connect students with opportunities that shape their future.
+            </p>
+          </div>
+
+          {/* Footer link sections */}
+          {footerLinks.map((section) => (
+            <div key={section.title}>
+              <h4 className="text-white text-lg font-semibold mb-6">
+                {section.title}
+              </h4>
+              <ul className="space-y-3">
+                {section.links.map((link) => (
+                  <li key={link.label} className="relative">
+                    <Link
+                      to={link.href}
+                      className="text-white/70 hover:text-primary transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+          {/* Contact section */}
+          <div>
+            <h4 className="text-white text-lg font-semibold mb-6">
+              Contact Us
+            </h4>
+            <ul className="space-y-4">
+              {contactInfo.map((item, i) => (
+                <li key={i} className="flex items-center space-x-3">
+                  {item.icon}
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      className="text-white/70 hover:text-primary transition-colors"
+                    >
+                      {item.text}
+                    </a>
+                  ) : (
+                    <span className="text-white/70 hover:text-primary transition-colors">
+                      {item.text}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        {/* Bottom Section */}
-        <motion.div
-          className="border-t border-white/20 mt-12 pt-8"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-        >
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-2 text-blue-200 font-inter">
-              <span>© {currentYear} Networkly. Made with</span>
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
+        {/* Footer bottom */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-sm space-y-4 md:space-y-0 pt-4">
+          {/* Social icons */}
+          <div className="flex space-x-6 text-white/60">
+            {socialLinks.map(({ icon, label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="hover:text-primary transition-colors"
               >
-                <Heart className="w-4 h-4 text-red-400 fill-red-400" />
-              </motion.div>
-              <span>by students.</span>
-            </div>
-            
-            <div className="flex items-center space-x-6 text-sm text-blue-200">
-              <Link to="/privacy" className="hover:text-white transition-colors duration-300">
-                Privacy
-              </Link>
-              <Link to="/terms" className="hover:text-white transition-colors duration-300">
-                Terms
-              </Link>
-              <Link to="/contact" className="hover:text-white transition-colors duration-300">
-                Contact
-              </Link>
-            </div>
+                {icon}
+              </a>
+            ))}
           </div>
-        </motion.div>
+
+          {/* Copyright */}
+          <div className="flex items-center space-x-2 text-white/70">
+            <span>&copy; {currentYear} Networkly.</span>
+          </div>
+        </div>
+
+        <hr className="border-t border-white/10 mt-4" />
       </div>
+
+      <FooterBackgroundGradient />
     </footer>
   );
 }
