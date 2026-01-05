@@ -1,12 +1,15 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './components/SuccessToast';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { AuthModal } from './components/AuthModal';
+import { OnboardingModal } from './components/OnboardingModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { supabase } from './lib/supabase';
 
 // Lazy load all pages for code splitting
 const Home = lazy(() => import('./pages/Home'));
@@ -47,14 +50,57 @@ function ScrollToTop() {
   return null;
 }
 
-function App() {
+function AppContent() {
+  const { user, loading } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [checkingOnboarding, setCheckingOnboarding] = useState(true);
+
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      if (!user) {
+        setCheckingOnboarding(false);
+        return;
+      }
+
+      try {
+        const { data } = await supabase
+          .from('profiles')
+          .select('onboarding_completed')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (!data || !data.onboarding_completed) {
+          setOnboardingOpen(true);
+        }
+      } catch (error) {
+        console.error('Error checking onboarding:', error);
+      } finally {
+        setCheckingOnboarding(false);
+      }
+    };
+
+    if (!loading) {
+      checkOnboarding();
+    }
+  }, [user, loading]);
+
+  const handleOnboardingComplete = () => {
+    setOnboardingOpen(false);
+  };
+
+  if (checkingOnboarding) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
-    <AuthProvider>
-      <ToastProvider>
+    <>
       <Router>
-          <ScrollToTop />
+        <ScrollToTop />
         <div className="min-h-screen bg-white">
           <Navbar onAuthClick={() => setAuthModalOpen(true)} />
           <Suspense fallback={
@@ -115,10 +161,22 @@ function App() {
           </Suspense>
             <Footer />
           <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+          <OnboardingModal isOpen={onboardingOpen} onComplete={handleOnboardingComplete} />
         </div>
       </Router>
-      </ToastProvider>
-    </AuthProvider>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <AuthProvider>
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

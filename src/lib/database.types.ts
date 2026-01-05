@@ -16,6 +16,8 @@ export interface Database {
           full_name: string | null
           school: string | null
           grade_level: string | null
+          age: number | null
+          gender: string | null
           bio: string | null
           interests: string[]
           achievements: string[]
@@ -24,6 +26,7 @@ export interface Database {
           resume_url: string | null
           profile_image_url: string | null
           location: string | null
+          onboarding_completed: boolean
           created_at: string
           updated_at: string
         }
@@ -33,6 +36,8 @@ export interface Database {
           full_name?: string | null
           school?: string | null
           grade_level?: string | null
+          age?: number | null
+          gender?: string | null
           bio?: string | null
           interests?: string[]
           achievements?: string[]
@@ -41,6 +46,7 @@ export interface Database {
           resume_url?: string | null
           profile_image_url?: string | null
           location?: string | null
+          onboarding_completed?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -50,6 +56,8 @@ export interface Database {
           full_name?: string | null
           school?: string | null
           grade_level?: string | null
+          age?: number | null
+          gender?: string | null
           bio?: string | null
           interests?: string[]
           achievements?: string[]
@@ -58,6 +66,7 @@ export interface Database {
           resume_url?: string | null
           profile_image_url?: string | null
           location?: string | null
+          onboarding_completed?: boolean
           created_at?: string
           updated_at?: string
         }

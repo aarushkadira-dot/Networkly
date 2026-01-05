@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { useToast } from '../components/SuccessToast';
 import { InteractiveHoverButton } from '../components/ui/interactive-hover-button';
+import { getPersonalizedOpportunities } from '../lib/opportunityMatching';
 import type { Database } from '../lib/database.types';
 
 type Opportunity = Database['public']['Tables']['opportunities']['Row'];
@@ -51,6 +52,29 @@ export default function Features({ onAuthClick }: FeaturesProps) {
   }, []);
 
   const loadOpportunities = async () => {
+    setLoading(true);
+    // For logged-in users, use personalized matching
+    if (user) {
+      try {
+        const matches = await getPersonalizedOpportunities(user.id, 50);
+        // Extract opportunities from matches and sort by score
+        const matchedOpps = matches.map(m => m.opportunity);
+        setOpportunities(matchedOpps);
+      } catch (error) {
+        console.error('Error loading personalized opportunities:', error);
+        // Fallback to regular load
+        const { data } = await supabase
+          .from('opportunities')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (data) {
+          setOpportunities(data);
+        }
+      }
+      setLoading(false);
+      return;
+    }
+    
     // For non-logged in users, show only specific opportunities
     if (!user) {
       const publicOpportunities: Opportunity[] = [
@@ -158,142 +182,6 @@ export default function Features({ onAuthClick }: FeaturesProps) {
       setLoading(false);
       return;
     }
-
-    // For logged-in users, fetch all opportunities from database
-    const { data, error } = await supabase
-      .from('opportunities')
-      .select('*');
-
-    if (error) {
-      console.error('Error loading opportunities:', error);
-    }
-
-    // If no data from database, use mock data for development
-    if (!data || data.length === 0) {
-      const mockOpportunities: Opportunity[] = [
-        {
-          id: 'mock-1',
-          title: 'Summer Research Internship at Duke Health',
-          organization: 'Duke Health',
-          description: 'Join our biomedical research team for an 8-week summer program. Work alongside leading researchers on cutting-edge projects in cancer research, molecular biology, and clinical trials.',
-          type: 'internship',
-          grade_levels: ['11', '12'],
-          deadline: '2025-03-15',
-          location: 'Durham, NC',
-          application_url: 'https://dukehealth.org/internships',
-          interests: ['Biology', 'Medicine', 'Research'],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          is_featured: false,
-          created_by: null
-        },
-        {
-          id: 'mock-2',
-          title: 'National Merit Scholarship',
-          organization: 'National Merit Scholarship Corporation',
-          description: 'Prestigious scholarship program recognizing academic excellence. Awards range from $2,500 to full-tuition scholarships at participating universities.',
-          type: 'scholarship',
-          grade_levels: ['11', '12'],
-          deadline: '2025-10-01',
-          location: 'Nationwide',
-          application_url: 'https://nationalmerit.org',
-          interests: ['Academic Excellence'],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          is_featured: false,
-          created_by: null
-        },
-        {
-          id: 'mock-3',
-          title: 'MIT Launch Summer Program',
-          organization: 'MIT',
-          description: 'Four-week entrepreneurship program where students start their own company. Learn business fundamentals, pitch to investors, and develop real products.',
-          type: 'summer_program',
-          grade_levels: ['9', '10', '11', '12'],
-          deadline: '2025-02-28',
-          location: 'Cambridge, MA',
-          application_url: 'https://launch.mit.edu',
-          interests: ['Entrepreneurship', 'Business', 'Technology'],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          is_featured: false,
-          created_by: null
-        },
-        {
-          id: 'mock-4',
-          title: 'Congressional App Challenge',
-          organization: 'U.S. House of Representatives',
-          description: 'Design and create an app addressing a problem in your community. Winners receive national recognition and an invitation to Capitol Hill.',
-          type: 'competition',
-          grade_levels: ['9', '10', '11', '12'],
-          deadline: '2025-11-01',
-          location: 'Virtual',
-          application_url: 'https://congressionalappchallenge.us',
-          interests: ['Computer Science', 'Coding', 'Technology'],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          is_featured: false,
-          created_by: null
-        },
-        {
-          id: 'mock-5',
-          title: 'Regeneron Science Talent Search',
-          organization: 'Regeneron Pharmaceuticals',
-          description: "Nation's oldest and most prestigious science research competition for high school seniors. Top prize: $250,000.",
-          type: 'competition',
-          grade_levels: ['12'],
-          deadline: '2025-11-15',
-          location: 'Nationwide',
-          application_url: 'https://regeneron.com/sts',
-          interests: ['Science', 'Research', 'STEM'],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          is_featured: false,
-          created_by: null
-        },
-        {
-          id: 'mock-6',
-          title: 'NASA SEES Internship',
-          organization: 'NASA',
-          description: 'Virtual summer internship focused on Earth science and climate research. Work with NASA scientists on real data and projects.',
-          type: 'internship',
-          grade_levels: ['10', '11', '12'],
-          deadline: '2025-01-31',
-          location: 'Virtual',
-          application_url: 'https://nasa.gov/sees',
-          interests: ['Science', 'Space', 'Environment'],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          is_featured: false,
-          created_by: null
-        },
-        {
-          id: 'mock-7',
-          title: 'MIT Undergraduate Research Technology Conference (URTC)',
-          organization: 'MIT',
-          description: 'Present your research at MIT\'s premier undergraduate research technology conference. Showcase innovative projects, network with peers and faculty, and gain recognition for your work in technology and engineering.',
-          type: 'conference',
-          grade_levels: ['11', '12'],
-          deadline: '2026-02-15',
-          location: 'Cambridge, MA',
-          application_url: 'https://www.mit.edu',
-          interests: ['Research', 'Technology', 'STEM', 'Engineering', 'Innovation'],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          is_featured: false,
-          created_by: null
-        }
-      ];
-      // Randomize mock opportunities
-      const shuffledMock = [...mockOpportunities].sort(() => Math.random() - 0.5);
-      setOpportunities(shuffledMock);
-    } else {
-      // Randomize database opportunities
-      const shuffledData = [...data].sort(() => Math.random() - 0.5);
-      setOpportunities(shuffledData);
-    }
-    
-    setLoading(false);
   };
 
   const loadApplications = async () => {
