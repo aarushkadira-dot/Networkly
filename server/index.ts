@@ -27,3 +27,4 @@ app.listen(PORT, () => {
   console.log(`🚀 Better Auth server running on http://localhost:${PORT}`);
   console.log(`📡 Auth API available at http://localhost:${PORT}/api/auth`);
 });
+

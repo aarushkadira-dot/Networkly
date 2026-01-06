@@ -662,7 +662,7 @@ export default function Features({ onAuthClick }: FeaturesProps) {
                           <span className="text-white text-sm font-medium">
                             {new Date(opp.deadline).toLocaleDateString()}
                           </span>
-                        </div>
+                    </div>
                       )}
                       {opp.location && (
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
@@ -714,7 +714,7 @@ export default function Features({ onAuthClick }: FeaturesProps) {
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+                </motion.div>
         )}
 
         {/* Sign-up CTA Section */}
@@ -734,8 +734,8 @@ export default function Features({ onAuthClick }: FeaturesProps) {
             text="Sign Up to Find More Opportunities"
             onClick={onAuthClick}
             className="text-lg px-8 py-4"
-                      />
-                    </motion.div>
+          />
+        </motion.div>
       </div>
     </div>
   );

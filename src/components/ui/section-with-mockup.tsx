@@ -143,3 +143,4 @@ const SectionWithMockup: React.FC<SectionWithMockupProps> = ({
 
 
 export default SectionWithMockup;
+

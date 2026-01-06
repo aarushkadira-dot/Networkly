@@ -89,11 +89,6 @@ function Contact() {
   return (
     <div className="min-h-screen bg-dark-navy pt-24 text-white relative overflow-hidden">
       {showConfetti && <ConfettiCelebration />}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-20 -left-24 h-96 w-96 rounded-full bg-gradient-to-br from-electric-blue to-soft-teal opacity-20 blur-3xl" />
-        <div className="absolute top-1/3 -right-24 h-80 w-80 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 opacity-20 blur-3xl" />
-        <div className="absolute bottom-0 left-1/2 h-96 w-96 -translate-x-1/2 transform rounded-full bg-gradient-to-br from-emerald-green to-green-500 opacity-10 blur-3xl" />
-      </div>
       
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
         {/* Hero Section */}

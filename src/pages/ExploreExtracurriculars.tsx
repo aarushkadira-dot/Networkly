@@ -136,7 +136,7 @@ function generateEmailTemplate({
 
   const toneClosing: Record<string, string> = {
     formal: 'Thank you for considering my note. I would be grateful for any guidance you can offer.',
-    enthusiastic: 'Thank you so much for reading, I\'d love to learn more about your work!',
+    enthusiastic: 'Thank you so much for reading, I'd love to learn more about your work!',
     concise: 'Thank you for your time. I’d appreciate any advice you can share.',
   };
 

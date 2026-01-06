@@ -78,20 +78,20 @@ const Blog7 = ({
   const displayPosts = posts && posts.length > 0 ? posts : defaultPosts;
   
   return (
-    <section className="py-24 sm:py-28 lg:py-32 bg-background">
+    <section className="py-24 sm:py-28 lg:py-32 bg-transparent">
       <div className="container mx-auto flex flex-col items-center gap-16 px-4 sm:px-6 lg:px-16">
         <div className="text-center max-w-3xl">
-          <Badge variant="secondary" className="mb-6 bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200">
+          <Badge variant="secondary" className="mb-6 bg-white/10 text-white border-white/20 hover:bg-white/20">
             {tagline}
           </Badge>
-          <h2 className="mb-3 text-pretty text-3xl font-sans font-semibold tracking-tight md:mb-4 md:text-4xl lg:mb-6 lg:text-5xl text-text-primary">
+          <h2 className="mb-3 text-pretty text-3xl font-sans font-semibold tracking-tight md:mb-4 md:text-4xl lg:mb-6 lg:text-5xl text-white">
             {heading}
           </h2>
-          <p className="mb-8 text-text-secondary md:text-base lg:text-lg">
+          <p className="mb-8 text-white/80 md:text-base lg:text-lg">
             {description}
           </p>
-          <Button variant="link" className="w-full sm:w-auto" asChild>
-            <a href={buttonUrl} target="_blank" rel="noreferrer">
+          <Button variant="link" className="w-full sm:w-auto text-primary hover:text-secondary" asChild>
+            <a href={buttonUrl} target="_blank" rel="noreferrer" className="text-primary hover:text-secondary">
               {buttonText}
               <ArrowRight className="ml-2 size-4" />
             </a>
@@ -103,10 +103,10 @@ const Blog7 = ({
             return (
               <div
                 key={post.id}
-                className="flex flex-col overflow-hidden rounded-lg shadow-lg bg-white h-full"
+                className="flex flex-col overflow-hidden rounded-lg shadow-lg bg-white/5 backdrop-blur-sm border border-white/10 h-full hover:bg-white/10 hover:border-white/20 transition-all duration-300"
               >
-                {/* Top Section: Light Gray Background with Icon */}
-                <div className="bg-gray-100 p-8 flex items-center justify-center aspect-[16/9] min-h-[180px] max-h-[180px] flex-shrink-0">
+                {/* Top Section: Dark Background with Icon */}
+                <div className="bg-white/5 p-8 flex items-center justify-center aspect-[16/9] min-h-[180px] max-h-[180px] flex-shrink-0 border-b border-white/10">
                   <div className="w-16 h-16 flex items-center justify-center">
                     {post.image ? (
                       <img
@@ -115,34 +115,34 @@ const Blog7 = ({
                         className="h-full w-full object-contain"
                       />
                     ) : (
-                      <IconComponent className="w-16 h-16 text-black" strokeWidth={1.5} fill="none" />
+                      <IconComponent className="w-16 h-16 text-white" strokeWidth={1.5} fill="none" />
                     )}
                   </div>
                 </div>
                 
-                {/* Bottom Section: White Background with Content */}
-                <div className="bg-white p-6 flex flex-col flex-1 min-h-0 overflow-hidden">
+                {/* Bottom Section: Dark Background with Content */}
+                <div className="bg-transparent p-6 flex flex-col flex-1 min-h-0 overflow-hidden">
                   <div className="mb-3 flex-shrink-0 overflow-hidden">
-                    <h3 className="text-lg font-semibold md:text-xl text-text-primary line-clamp-2 break-words">
+                    <h3 className="text-lg font-semibold md:text-xl text-white line-clamp-2 break-words">
                       <a
                         href={post.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="hover:underline block"
+                        className="hover:underline block hover:text-primary transition-colors"
                       >
                         {post.title}
                       </a>
                     </h3>
                   </div>
                   <div className="mb-4 flex-1 min-h-0 overflow-hidden">
-                    <p className="text-sm text-text-secondary leading-relaxed line-clamp-3 break-words overflow-hidden">{post.summary}</p>
+                    <p className="text-sm text-white/70 leading-relaxed line-clamp-3 break-words overflow-hidden">{post.summary}</p>
                   </div>
                   <div className="flex-shrink-0 mt-auto">
                     <a
                       href={post.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center text-text-primary hover:underline text-sm font-medium whitespace-nowrap"
+                      className="flex items-center text-primary hover:text-secondary transition-colors text-sm font-medium whitespace-nowrap"
                     >
                       Read more
                       <ArrowRight className="ml-2 size-4 flex-shrink-0" />

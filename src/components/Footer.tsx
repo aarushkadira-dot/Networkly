@@ -62,7 +62,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-dark-navy relative h-fit overflow-hidden">
+    <footer className="bg-dark-navy relative h-fit overflow-hidden border-t border-white/20">
       <div className="max-w-7xl mx-auto px-6 py-10 md:px-8 md:py-12 z-40 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-8 lg:gap-12 pb-6">
           {/* Brand section */}

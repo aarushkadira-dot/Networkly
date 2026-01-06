@@ -55,8 +55,9 @@ function App() {
       <ToastProvider>
       <Router>
           <ScrollToTop />
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white flex flex-col">
           <Navbar onAuthClick={() => setAuthModalOpen(true)} />
+          <div className="flex-1">
           <Suspense fallback={
             <div className="flex min-h-screen items-center justify-center">
               <LoadingSpinner />
@@ -113,6 +114,7 @@ function App() {
               />
           </Routes>
           </Suspense>
+          </div>
             <Footer />
           <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
         </div>
