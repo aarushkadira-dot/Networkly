@@ -85,15 +85,15 @@ export function OpportunityTypesSection({ className }: OpportunityTypesSectionPr
       const gap = 24;
       const scrollAmount = cardWidth + gap;
       const currentScroll = scrollContainerRef.current.scrollLeft;
-      const targetScroll = direction === 'right' 
-        ? currentScroll + scrollAmount 
+      const targetScroll = direction === 'right'
+        ? currentScroll + scrollAmount
         : currentScroll - scrollAmount;
-      
+
       scrollContainerRef.current.scrollTo({
         left: targetScroll,
         behavior: 'smooth',
       });
-      
+
       // Check scroll position after animation
       setTimeout(checkScroll, 500);
     }
@@ -123,11 +123,10 @@ export function OpportunityTypesSection({ className }: OpportunityTypesSectionPr
             <div className="flex gap-2">
               <button
                 onClick={() => scroll('left')}
-                className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 ${
-                  showLeftArrow
-                    ? 'border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50'
-                    : 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
-                }`}
+                className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 ${showLeftArrow
+                  ? 'border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50'
+                  : 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
+                  }`}
                 disabled={!showLeftArrow}
                 aria-label="Scroll left"
               >
@@ -135,11 +134,10 @@ export function OpportunityTypesSection({ className }: OpportunityTypesSectionPr
               </button>
               <button
                 onClick={() => scroll('right')}
-                className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 ${
-                  showRightArrow
-                    ? 'border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50'
-                    : 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
-                }`}
+                className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 ${showRightArrow
+                  ? 'border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50'
+                  : 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
+                  }`}
                 disabled={!showRightArrow}
                 aria-label="Scroll right"
               >
@@ -148,17 +146,15 @@ export function OpportunityTypesSection({ className }: OpportunityTypesSectionPr
             </div>
           </div>
           {/* Left fade gradient */}
-          <div 
-            className={`absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-dark-navy to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
-              showLeftArrow ? 'opacity-100' : 'opacity-0'
-            }`}
+          <div
+            className={`absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-dark-navy to-transparent z-10 pointer-events-none transition-opacity duration-300 ${showLeftArrow ? 'opacity-100' : 'opacity-0'
+              }`}
           />
-          
+
           {/* Right fade gradient */}
-          <div 
-            className={`absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-dark-navy to-transparent z-10 pointer-events-none transition-opacity duration-300 ${
-              showRightArrow ? 'opacity-100' : 'opacity-0'
-            }`}
+          <div
+            className={`absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-dark-navy to-transparent z-10 pointer-events-none transition-opacity duration-300 ${showRightArrow ? 'opacity-100' : 'opacity-0'
+              }`}
           />
 
           <div
@@ -173,7 +169,7 @@ export function OpportunityTypesSection({ className }: OpportunityTypesSectionPr
               }
             `}</style>
             <div className="flex gap-6" style={{ width: 'max-content' }}>
-              {opportunityTypes.map((type, index) => {
+              {opportunityTypes.map((type) => {
                 const Icon = type.icon;
                 return (
                   <div
@@ -183,13 +179,6 @@ export function OpportunityTypesSection({ className }: OpportunityTypesSectionPr
                   >
                     {/* Top border accent */}
                     <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    {/* Icon */}
-                    <div className="mb-6">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-primary" />
-                      </div>
-                    </div>
 
                     {/* Content */}
                     <h3 className="text-2xl font-bold text-white mb-4">

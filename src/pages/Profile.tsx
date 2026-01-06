@@ -21,6 +21,8 @@ function Profile() {
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     full_name: '',
+    age: '',
+    gender: '',
     school: '',
     grade_level: '',
     bio: '',
@@ -53,6 +55,8 @@ function Profile() {
       setProfile(data);
       setFormData({
         full_name: data.full_name || '',
+        age: data.age?.toString() || '',
+        gender: data.gender || '',
         school: data.school || '',
         grade_level: data.grade_level || '',
         bio: data.bio || '',
@@ -77,7 +81,17 @@ function Profile() {
       .upsert({
         id: user.id,
         email: user.email!,
-        ...formData,
+        full_name: formData.full_name,
+        age: formData.age ? parseInt(formData.age) : null,
+        gender: formData.gender || null,
+        school: formData.school,
+        grade_level: formData.grade_level,
+        bio: formData.bio,
+        location: formData.location,
+        interests: formData.interests,
+        skills: formData.skills,
+        achievements: formData.achievements,
+        projects: formData.projects,
       });
 
     if (error) {
@@ -134,6 +148,8 @@ function Profile() {
                 if (profile) {
                   setFormData({
                     full_name: profile.full_name || '',
+                    age: profile.age?.toString() || '',
+                    gender: profile.gender || '',
                     school: profile.school || '',
                     grade_level: profile.grade_level || '',
                     bio: profile.bio || '',
@@ -173,6 +189,39 @@ function Profile() {
                   onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                   placeholder="Your name"
                 />
+                <div>
+                  <label className="block text-sm font-medium text-white mb-1.5">
+                    Age
+                  </label>
+                  <input
+                    type="number"
+                    min="13"
+                    max="19"
+                    value={formData.age}
+                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                    placeholder="Your age"
+                    className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
+                      focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-white mb-1.5">
+                    Gender
+                  </label>
+                  <select
+                    value={formData.gender}
+                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                    className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
+                      focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent"
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="non-binary">Non-binary</option>
+                    <option value="prefer-not-to-say">Prefer not to say</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
                 <Input
                   label="School"
                   value={formData.school}
@@ -299,6 +348,12 @@ function Profile() {
                       <div className="flex items-center gap-1.5">
                         <School className="w-4 h-4" />
                         <span>{profile.school}</span>
+                      </div>
+                    )}
+                    {profile?.age && (
+                      <div className="flex items-center gap-1.5">
+                        <Award className="w-4 h-4" />
+                        <span>Age {profile.age}</span>
                       </div>
                     )}
                     {profile?.grade_level && (

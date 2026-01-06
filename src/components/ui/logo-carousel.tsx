@@ -3,9 +3,7 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useState,
-  type SVGProps,
 } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 
@@ -27,7 +25,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
   return shuffled
 }
@@ -109,10 +107,10 @@ const LogoColumn: React.FC<LogoColumnProps> = React.memo(
                     alt={currentName}
                     className="h-12 w-auto md:h-16 object-contain"
                     style={{
-                      filter: currentLogo.customFilter 
-                        ? currentLogo.customFilter 
-                        : currentLogo.applyWhiteFilter 
-                          ? 'brightness(0) invert(1)' 
+                      filter: currentLogo.customFilter
+                        ? currentLogo.customFilter
+                        : currentLogo.applyWhiteFilter
+                          ? 'brightness(0) invert(1)'
                           : 'none',
                     }}
                   />

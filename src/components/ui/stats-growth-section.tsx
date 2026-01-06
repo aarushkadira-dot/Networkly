@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TrendingUp, Award, Target, Rocket, CheckCircle2, Building2, FileCheck, Users, BookOpen } from "lucide-react";
+import { TrendingUp, Award, Target, Rocket, CheckCircle2, FileCheck, Users, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface GrowthFeature {
@@ -159,10 +159,10 @@ const growthFeatures: GrowthFeature[] = [
   },
 ];
 
-function FeatureStepsAnimation({ 
-  features, 
-  autoPlayInterval = 4000 
-}: { 
+function FeatureStepsAnimation({
+  features,
+  autoPlayInterval = 4000
+}: {
   features: GrowthFeature[];
   autoPlayInterval?: number;
 }) {
@@ -229,8 +229,8 @@ function FeatureStepsAnimation({
                   index === currentFeature
                     ? "bg-gradient-to-br from-blue-500 to-purple-500 border-blue-400 text-white scale-110"
                     : index < currentFeature
-                    ? "bg-white/10 border-white/30 text-white/70"
-                    : "bg-white/5 border-white/20",
+                      ? "bg-white/10 border-white/30 text-white/70"
+                      : "bg-white/5 border-white/20",
                 )}
               >
                 {index <= currentFeature && (
@@ -270,7 +270,7 @@ export function StatsGrowthSection() {
             <span className="inline-block px-4 py-1.5 rounded-full text-sm font-medium bg-white/10 text-white/80 border border-white/20 mb-6">
               Built for growth
             </span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tighter text-white mb-6 whitespace-nowrap">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tighter text-white mb-6">
               Get Stacked in Every Way Possible
             </h2>
           </motion.div>

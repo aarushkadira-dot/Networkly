@@ -163,10 +163,10 @@ function Contact() {
                   aarush.kadira@gmail.com
                 </a>
                 <a
-                  href="mailto:joeljmanuel@gmail.com"
+                  href="mailto:saatviksantosh10@gmail.com"
                       className="block text-electric-blue hover:underline font-medium"
                 >
-                  joeljmanuel@gmail.com
+                  saatviksantosh10@gmail.com
                 </a>
               </div>
             </div>

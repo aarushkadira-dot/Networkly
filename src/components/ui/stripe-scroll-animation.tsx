@@ -29,7 +29,6 @@ export function StripeScrollAnimation({
   });
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const progress = Math.max(0, Math.min(1, latest));
     const breakpoints = features.map((_, i) => i / features.length);
     const closestIndex = breakpoints.reduce((acc, bp, idx) => {
       const distance = Math.abs(latest - bp);
@@ -121,4 +120,5 @@ export function StripeScrollAnimation({
       </div>
     </div>
   );
+}
 }
