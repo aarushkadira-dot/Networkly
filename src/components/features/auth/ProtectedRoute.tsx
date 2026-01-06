@@ -1,8 +1,8 @@
 import { ReactElement, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { LoadingSpinner } from './LoadingSpinner';
-import { Button } from './Button';
+import { useAuth } from '../../../contexts/AuthContext';
+import { LoadingSpinner } from '../../common/LoadingSpinner';
+import { Button } from '../../ui/liquid-glass-button';
 
 interface ProtectedRouteProps {
   children: ReactElement;

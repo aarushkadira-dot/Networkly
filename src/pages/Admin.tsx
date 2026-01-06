@@ -3,11 +3,11 @@ import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
-import { Input } from '../components/Input';
-import { Badge } from '../components/Badge';
-import { LoadingSpinner } from '../components/LoadingSpinner';
+import { Card } from '../components/ui/card';
+import { Button } from '../components/ui/liquid-glass-button';
+import { Input } from '../components/ui/input';
+import { Badge } from '../components/ui/badge';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import type { Database } from '../lib/database.types';
 import { useNavigate } from 'react-router-dom';
 import { fadeInUp, staggerContainer } from '../lib/animations';
@@ -172,7 +172,7 @@ function Admin() {
   return (
     <div className="min-h-screen bg-dark-navy text-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <motion.div 
+        <motion.div
           className="flex justify-between items-center mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -190,161 +190,160 @@ function Admin() {
         </motion.div>
 
         <AnimatePresence>
-        {(creating || editingId) && (
+          {(creating || editingId) && (
             <motion.div
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
               animate={{ opacity: 1, height: 'auto', marginBottom: 32 }}
               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
             >
-          <Card className="mb-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-white">
-                {editingId ? 'Edit Opportunity' : 'Create New Opportunity'}
-              </h2>
-              <button onClick={resetForm} className="p-2 hover:bg-gray-100 rounded-lg">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <Input
-                label="Title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Opportunity title"
-                required
-              />
-
-              <div>
-                <label className="block text-sm font-medium text-white mb-1.5">
-                  Type
-                </label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as typeof formData.type })}
-                  className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg"
-                  required
-                >
-                  <option value="internship">Internship</option>
-                  <option value="scholarship">Scholarship</option>
-                  <option value="summer_program">Summer Program</option>
-                  <option value="research">Research</option>
-                  <option value="competition">Competition</option>
-                </select>
-              </div>
-
-              <Input
-                label="Organization"
-                value={formData.organization}
-                onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                placeholder="Hosting organization"
-                required
-              />
-
-              <div>
-                <label className="block text-sm font-medium text-white mb-1.5">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Full description..."
-                  rows={4}
-                  className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg resize-none"
-                  required
-                />
-              </div>
-
-              <Input
-                label="Location"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                placeholder="City, State or Remote"
-              />
-
-              <Input
-                label="Deadline"
-                type="date"
-                value={formData.deadline}
-                onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-              />
-
-              <Input
-                label="Application URL"
-                value={formData.application_url}
-                onChange={(e) => setFormData({ ...formData, application_url: e.target.value })}
-                placeholder="https://..."
-              />
-
-              <div>
-                <label className="block text-sm font-medium text-charcoal mb-2">
-                  Eligible Grade Levels
-                </label>
-                <div className="flex gap-2">
-                  {['9', '10', '11', '12'].map((grade) => (
-                    <button
-                      key={grade}
-                      onClick={() => toggleGrade(grade)}
-                      className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                        formData.grade_levels.includes(grade)
-                          ? 'bg-electric-blue text-white'
-                          : 'bg-gray-100 text-charcoal'
-                      }`}
-                    >
-                      {grade}th
-                    </button>
-                  ))}
+              <Card className="mb-8">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-white">
+                    {editingId ? 'Edit Opportunity' : 'Create New Opportunity'}
+                  </h2>
+                  <button onClick={resetForm} className="p-2 hover:bg-gray-100 rounded-lg">
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-charcoal mb-2">
-                  Interests/Tags
-                </label>
-                <div className="flex gap-2 mb-2">
+                <div className="space-y-4">
                   <Input
-                    placeholder="Add interest..."
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addInterest((e.target as HTMLInputElement).value);
-                        (e.target as HTMLInputElement).value = '';
-                      }
-                    }}
+                    label="Title"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="Opportunity title"
+                    required
                   />
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {formData.interests.map((interest, index) => (
-                    <Badge key={index} variant="blue" className="cursor-pointer">
-                      {interest}
-                      <button
-                        onClick={() => removeInterest(index)}
-                        className="ml-2 hover:text-red-600"
-                      >
-                        ×
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              </div>
 
-              <div className="flex gap-3 pt-4">
-                <Button onClick={handleSave} disabled={!formData.title || !formData.organization || !formData.description}>
-                  <Save className="w-4 h-4 mr-2" />
-                  {editingId ? 'Update' : 'Create'}
-                </Button>
-                <Button variant="outline" onClick={resetForm}>
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </Card>
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-1.5">
+                      Type
+                    </label>
+                    <select
+                      value={formData.type}
+                      onChange={(e) => setFormData({ ...formData, type: e.target.value as typeof formData.type })}
+                      className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg"
+                      required
+                    >
+                      <option value="internship">Internship</option>
+                      <option value="scholarship">Scholarship</option>
+                      <option value="summer_program">Summer Program</option>
+                      <option value="research">Research</option>
+                      <option value="competition">Competition</option>
+                    </select>
+                  </div>
+
+                  <Input
+                    label="Organization"
+                    value={formData.organization}
+                    onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
+                    placeholder="Hosting organization"
+                    required
+                  />
+
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-1.5">
+                      Description
+                    </label>
+                    <textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Full description..."
+                      rows={4}
+                      className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg resize-none"
+                      required
+                    />
+                  </div>
+
+                  <Input
+                    label="Location"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="City, State or Remote"
+                  />
+
+                  <Input
+                    label="Deadline"
+                    type="date"
+                    value={formData.deadline}
+                    onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                  />
+
+                  <Input
+                    label="Application URL"
+                    value={formData.application_url}
+                    onChange={(e) => setFormData({ ...formData, application_url: e.target.value })}
+                    placeholder="https://..."
+                  />
+
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal mb-2">
+                      Eligible Grade Levels
+                    </label>
+                    <div className="flex gap-2">
+                      {['9', '10', '11', '12'].map((grade) => (
+                        <button
+                          key={grade}
+                          onClick={() => toggleGrade(grade)}
+                          className={`px-4 py-2 rounded-lg font-medium transition-all ${formData.grade_levels.includes(grade)
+                            ? 'bg-electric-blue text-white'
+                            : 'bg-gray-100 text-charcoal'
+                            }`}
+                        >
+                          {grade}th
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal mb-2">
+                      Interests/Tags
+                    </label>
+                    <div className="flex gap-2 mb-2">
+                      <Input
+                        placeholder="Add interest..."
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            addInterest((e.target as HTMLInputElement).value);
+                            (e.target as HTMLInputElement).value = '';
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.interests.map((interest, index) => (
+                        <Badge key={index} variant="blue" className="cursor-pointer">
+                          {interest}
+                          <button
+                            onClick={() => removeInterest(index)}
+                            className="ml-2 hover:text-red-600"
+                          >
+                            ×
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button onClick={handleSave} disabled={!formData.title || !formData.organization || !formData.description}>
+                      <Save className="w-4 h-4 mr-2" />
+                      {editingId ? 'Update' : 'Create'}
+                    </Button>
+                    <Button variant="outline" onClick={resetForm}>
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </Card>
             </motion.div>
-        )}
+          )}
         </AnimatePresence>
 
-        <motion.div 
+        <motion.div
           className="space-y-4"
           variants={staggerContainer}
           initial="hidden"
@@ -357,42 +356,42 @@ function Admin() {
               custom={index}
             >
               <Card>
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-charcoal mb-1">
-                    {opp.title}
-                  </h3>
-                  <p className="text-electric-blue font-medium mb-2">
-                    {opp.organization}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <Badge variant="blue">{opp.type.replace('_', ' ')}</Badge>
-                    {opp.deadline && (
-                      <Badge variant="peach">
-                        Deadline: {new Date(opp.deadline).toLocaleDateString()}
-                      </Badge>
-                    )}
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-charcoal mb-1">
+                      {opp.title}
+                    </h3>
+                    <p className="text-electric-blue font-medium mb-2">
+                      {opp.organization}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      <Badge variant="blue">{opp.type.replace('_', ' ')}</Badge>
+                      {opp.deadline && (
+                        <Badge variant="peach">
+                          Deadline: {new Date(opp.deadline).toLocaleDateString()}
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-gray-600 text-sm line-clamp-2">
+                      {opp.description}
+                    </p>
                   </div>
-                  <p className="text-gray-600 text-sm line-clamp-2">
-                    {opp.description}
-                  </p>
+                  <div className="flex gap-2 ml-4">
+                    <button
+                      onClick={() => handleEdit(opp)}
+                      className="p-2 hover:bg-blue-50 text-electric-blue rounded-lg transition-colors"
+                    >
+                      <Edit2 className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(opp.id)}
+                      className="p-2 hover:bg-red-50 text-red-500 rounded-lg transition-colors"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-2 ml-4">
-                  <button
-                    onClick={() => handleEdit(opp)}
-                    className="p-2 hover:bg-blue-50 text-electric-blue rounded-lg transition-colors"
-                  >
-                    <Edit2 className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(opp.id)}
-                    className="p-2 hover:bg-red-50 text-red-500 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            </Card>
+              </Card>
             </motion.div>
           ))}
         </motion.div>

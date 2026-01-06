@@ -30,7 +30,7 @@ export function CTASection() {
           <div className="mt-8 flex flex-col items-center">
             <Link
               to="/students"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-secondary px-8 py-4 text-lg font-semibold text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.6)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_30px_-12px_rgba(37,99,235,0.6)]"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-lg font-medium text-white hover:bg-primary-600 transition-colors"
             >
               👉 Create your free Networkly profile
               <ArrowRight className="w-5 h-5" />

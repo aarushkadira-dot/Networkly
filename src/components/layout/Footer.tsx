@@ -1,5 +1,4 @@
-"use client";
-import React from "react";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import {
   Mail,
@@ -8,11 +7,10 @@ import {
   Linkedin,
   Github,
   Twitter,
-  Heart,
 } from "lucide-react";
-import { FooterBackgroundGradient } from "./ui/hover-footer";
+import { FooterBackgroundGradient } from "../ui/hover-footer";
 
-export function Footer() {
+export const Footer = memo(function Footer() {
   const currentYear = new Date().getFullYear();
 
   // Footer link data
@@ -62,15 +60,15 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-dark-navy relative h-fit overflow-hidden border-t border-white/20">
+    <footer className="bg-dark-navy relative h-fit overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 py-10 md:px-8 md:py-12 z-40 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-8 lg:gap-12 pb-6">
           {/* Brand section */}
           <div className="flex flex-col space-y-4">
             <div className="flex items-center space-x-2">
-              <img 
-                src="/assets/logos/networklylogo.png" 
-                alt="Networkly Logo" 
+              <img
+                src="/assets/logos/networklylogo.png"
+                alt="Networkly Logo"
                 className="w-8 h-8 object-contain"
               />
               <span className="text-white text-2xl font-bold">Networkly</span>
@@ -158,4 +156,4 @@ export function Footer() {
       <FooterBackgroundGradient />
     </footer>
   );
-}
+});

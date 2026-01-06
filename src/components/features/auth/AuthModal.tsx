@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Modal } from './Modal';
-import { Input } from './Input';
-import { Button } from './Button';
-import { useAuth } from '../contexts/AuthContext';
+import { Modal } from '../../common/Modal';
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/liquid-glass-button';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface AuthModalProps {
   isOpen: boolean;

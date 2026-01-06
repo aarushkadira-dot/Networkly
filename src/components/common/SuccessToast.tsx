@@ -30,17 +30,17 @@ const celebrationMessages = [
 const toastConfig = {
   success: {
     icon: CheckCircle,
-    gradient: 'from-accent to-accent-600',
+    gradient: 'bg-accent',
     borderColor: 'border-accent'
   },
   celebration: {
     icon: Star,
-    gradient: 'from-yellow-400 to-orange-500',
+    gradient: 'bg-yellow-400',
     borderColor: 'border-yellow-400'
   },
   motivation: {
     icon: Sparkles,
-    gradient: 'from-purple-500 to-pink-500',
+    gradient: 'bg-purple-500',
     borderColor: 'border-purple-500'
   }
 };
@@ -104,7 +104,7 @@ function ToastContainer({ toasts, onClose }: { toasts: Toast[], onClose: (id: nu
             >
               <div className="flex items-start gap-3 p-4">
                 <motion.div
-                  className={`flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br ${config.gradient} flex items-center justify-center`}
+                  className={`flex-shrink-0 w-10 h-10 rounded-full ${config.gradient} flex items-center justify-center`}
                   animate={{ 
                     rotate: [0, 10, -10, 10, 0],
                     scale: [1, 1.1, 1]
@@ -132,7 +132,7 @@ function ToastContainer({ toasts, onClose }: { toasts: Toast[], onClose: (id: nu
 
               {/* Animated progress bar */}
               <motion.div
-                className={`h-1 bg-gradient-to-r ${config.gradient}`}
+                className={`h-1 ${config.gradient}`}
                 initial={{ width: '100%' }}
                 animate={{ width: '0%' }}
                 transition={{ duration: 5, ease: 'linear' }}
@@ -211,9 +211,9 @@ export function CelebrationModal({
   iconType = 'star' 
 }: CelebrationModalProps) {
   const iconConfig = {
-    star: { icon: Star, color: 'from-yellow-400 to-yellow-500' },
-    trophy: { icon: Trophy, color: 'from-yellow-500 to-orange-500' },
-    rocket: { icon: Rocket, color: 'from-primary to-purple-500' }
+    star: { icon: Star, color: 'bg-yellow-400' },
+    trophy: { icon: Trophy, color: 'bg-yellow-500' },
+    rocket: { icon: Rocket, color: 'bg-primary' }
   };
 
   const selectedIcon = iconConfig[iconType];
@@ -240,7 +240,7 @@ export function CelebrationModal({
               transition={{ type: 'spring', stiffness: 200, damping: 20 }}
             >
               {/* Gradient header */}
-              <div className={`bg-gradient-to-r ${selectedIcon.color} p-8 text-center`}>
+              <div className={`${selectedIcon.color} p-8 text-center`}>
                 <motion.div
                   className="w-24 h-24 mx-auto mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
                   animate={{ 
@@ -275,7 +275,7 @@ export function CelebrationModal({
 
                 <motion.button
                   onClick={onClose}
-                  className="bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 mx-auto"
+                  className="bg-primary text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 mx-auto"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

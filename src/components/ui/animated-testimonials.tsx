@@ -1,10 +1,8 @@
-"use client"
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Quote, Star } from "lucide-react"
 import { motion, useAnimation, useInView } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export interface Testimonial {
   id: number
@@ -118,9 +116,8 @@ export function AnimatedTestimonials({
                   <button
                     key={index}
                     onClick={() => setActiveIndex(index)}
-                    className={`h-2.5 rounded-full transition-all duration-300 ${
-                      activeIndex === index ? "w-10 bg-primary" : "w-2.5 bg-white/30"
-                    }`}
+                    className={`h-2.5 rounded-full transition-all duration-300 ${activeIndex === index ? "w-10 bg-primary" : "w-2.5 bg-white/30"
+                      }`}
                     aria-label={`View testimonial ${index + 1}`}
                   />
                 ))}

@@ -1,13 +1,13 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { ToastProvider } from './components/SuccessToast';
-import { Navbar } from './components/Navbar';
-import { Footer } from './components/Footer';
-import { AuthModal } from './components/AuthModal';
+import { ToastProvider } from './components/common/SuccessToast';
+import { Navbar } from './components/layout/Navbar';
+import { Footer } from './components/layout/Footer';
+import { AuthModal } from './components/features/auth/AuthModal';
 import { OnboardingModal } from './components/OnboardingModal';
-import { LoadingSpinner } from './components/LoadingSpinner';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { LoadingSpinner } from './components/common/LoadingSpinner';
+import { ProtectedRoute } from './components/features/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { supabase } from './lib/supabase';
 
@@ -68,7 +68,7 @@ function AppContent() {
           .from('profiles')
           .select('onboarding_completed')
           .eq('id', user.id)
-          .maybeSingle();
+          .maybeSingle() as { data: { onboarding_completed: boolean } | null; error: any };
 
         if (!data || !data.onboarding_completed) {
           setOnboardingOpen(true);
@@ -98,17 +98,15 @@ function AppContent() {
   }
 
   return (
-    <>
-      <Router>
-        <ScrollToTop />
-        <div className="min-h-screen bg-white flex flex-col">
-          <Navbar onAuthClick={() => setAuthModalOpen(true)} />
-          <div className="flex-1">
-          <Suspense fallback={
-            <div className="flex min-h-screen items-center justify-center">
-              <LoadingSpinner />
-            </div>
-          }>
+    <Router>
+      <ScrollToTop />
+      <div className="min-h-screen bg-[#030617]">
+        <Navbar onAuthClick={() => setAuthModalOpen(true)} />
+        <Suspense fallback={
+          <div className="flex min-h-screen items-center justify-center">
+            <LoadingSpinner />
+          </div>
+        }>
           <Routes>
             <Route path="/" element={<Home onAuthClick={() => setAuthModalOpen(true)} />} />
             <Route path="/about" element={<About onAuthClick={() => setAuthModalOpen(true)} />} />
@@ -117,56 +115,54 @@ function AppContent() {
             <Route path="/team" element={<Team />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
-              <Route path="/students" element={<Students />} />
-              <Route path="/auth/callback" element={<AuthCallback />} />
-              
-              {/* Feature detail pages */}
-              <Route path="/features/ai-powered-matching" element={<AIPoweredMatching />} />
-              <Route path="/features/discover-opportunities" element={<DiscoverOpportunities />} />
-              <Route path="/features/smart-deadline-tracker" element={<SmartDeadlineTracker />} />
-              <Route path="/features/connect-with-students" element={<ConnectWithStudents />} />
-              <Route path="/features/real-time-notifications" element={<RealTimeNotifications />} />
-              <Route path="/features/personalized-recommendations" element={<PersonalizedRecommendations />} />
-              <Route path="/features/track-achievements" element={<TrackAchievements />} />
-              <Route path="/features/research-opportunities" element={<ResearchOpportunities />} />
-              <Route path="/features/internship-matching" element={<InternshipMatching />} />
-              <Route path="/features/instant-applications" element={<InstantApplications />} />
-              <Route path="/features/free-forever" element={<FreeForever />} />
-              <Route path="/features/career-growth" element={<CareerGrowth />} />
-              
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute onAuthRequired={() => setAuthModalOpen(true)}>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute requireAdmin onAuthRequired={() => setAuthModalOpen(true)}>
-                    <Admin />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/notifications"
-                element={
-                  <ProtectedRoute onAuthRequired={() => setAuthModalOpen(true)}>
-                    <Notifications />
-                  </ProtectedRoute>
-                }
-              />
+            <Route path="/students" element={<Students />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
+
+            {/* Feature detail pages */}
+            <Route path="/features/ai-powered-matching" element={<AIPoweredMatching />} />
+            <Route path="/features/discover-opportunities" element={<DiscoverOpportunities />} />
+            <Route path="/features/smart-deadline-tracker" element={<SmartDeadlineTracker />} />
+            <Route path="/features/connect-with-students" element={<ConnectWithStudents />} />
+            <Route path="/features/real-time-notifications" element={<RealTimeNotifications />} />
+            <Route path="/features/personalized-recommendations" element={<PersonalizedRecommendations />} />
+            <Route path="/features/track-achievements" element={<TrackAchievements />} />
+            <Route path="/features/research-opportunities" element={<ResearchOpportunities />} />
+            <Route path="/features/internship-matching" element={<InternshipMatching />} />
+            <Route path="/features/instant-applications" element={<InstantApplications />} />
+            <Route path="/features/free-forever" element={<FreeForever />} />
+            <Route path="/features/career-growth" element={<CareerGrowth />} />
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute onAuthRequired={() => setAuthModalOpen(true)}>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requireAdmin onAuthRequired={() => setAuthModalOpen(true)}>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute onAuthRequired={() => setAuthModalOpen(true)}>
+                  <Notifications />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
-          </Suspense>
-          </div>
-            <Footer />
-          <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
-          <OnboardingModal isOpen={onboardingOpen} onComplete={handleOnboardingComplete} />
-        </div>
-      </Router>
-    </>
+        </Suspense>
+        <Footer />
+        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+        <OnboardingModal isOpen={onboardingOpen} onComplete={handleOnboardingComplete} />
+      </div>
+    </Router>
   );
 }
 

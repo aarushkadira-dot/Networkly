@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Search, Filter, Calendar, MapPin, ExternalLink, Bookmark, BookmarkCheck, GraduationCap, Award, Briefcase, Beaker, Trophy, Sparkles, ChevronDown } from 'lucide-react';
+import { Search, Filter, Calendar, Bookmark, BookmarkCheck, GraduationCap, Award, Briefcase, Beaker, Trophy, Sparkles, ChevronDown, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { LoadingSpinner } from '../components/LoadingSpinner';
-import { useToast } from '../components/SuccessToast';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { useToast } from '../components/common/SuccessToast';
 import { InteractiveHoverButton } from '../components/ui/interactive-hover-button';
 import { getPersonalizedOpportunities } from '../lib/opportunityMatching';
 import type { Database } from '../lib/database.types';
@@ -74,7 +74,7 @@ export default function Features({ onAuthClick }: FeaturesProps) {
       setLoading(false);
       return;
     }
-    
+
     // For non-logged in users, show only specific opportunities
     if (!user) {
       const publicOpportunities: Opportunity[] = [
@@ -175,7 +175,7 @@ export default function Features({ onAuthClick }: FeaturesProps) {
           created_by: null
         }
       ];
-      
+
       // Randomize the order of opportunities
       const shuffled = [...publicOpportunities].sort(() => Math.random() - 0.5);
       setOpportunities(shuffled);
@@ -252,40 +252,30 @@ export default function Features({ onAuthClick }: FeaturesProps) {
     return matchesSearch && matchesType && matchesGrade;
   });
 
-  const getTypeColor = (type: string) => {
-    const colors: Record<string, string> = {
-      internship: 'from-blue-500 to-cyan-400',
-      scholarship: 'from-emerald-500 to-teal-400',
-      summer_program: 'from-purple-500 to-pink-400',
-      research: 'from-indigo-500 to-violet-500',
-      competition: 'from-orange-500 to-yellow-400',
-      conference: 'from-rose-500 to-pink-400',
-    };
-    return colors[type] || 'from-gray-500 to-gray-400';
-  };
 
-  const getTypeGradientStyle = (type: string) => {
-    const gradients: Record<string, string> = {
-      internship: 'linear-gradient(to right, #3B82F6, #22D3EE)', // Blue to Cyan
-      scholarship: 'linear-gradient(to right, #10B981, #2DD4BF)', // Emerald to Teal
-      summer_program: 'linear-gradient(to right, #A855F7, #F472B6)', // Purple to Pink
-      research: 'linear-gradient(to right, #6366F1, #8B5CF6)', // Indigo to Violet
-      competition: 'linear-gradient(to right, #F97316, #FACC15)', // Orange to Yellow
-      conference: 'linear-gradient(to right, #F43F5E, #F472B6)', // Rose to Pink
+
+  const getLightTypeColor = (type: string) => {
+    const colors: Record<string, string> = {
+      internship: 'bg-blue-500/10 text-blue-400',
+      scholarship: 'bg-emerald-500/10 text-emerald-400',
+      summer_program: 'bg-purple-500/10 text-purple-400',
+      research: 'bg-indigo-500/10 text-indigo-400',
+      competition: 'bg-orange-500/10 text-orange-400',
+      conference: 'bg-rose-500/10 text-rose-400',
     };
-    return gradients[type] || 'linear-gradient(to right, #6B7280, #9CA3AF)';
+    return colors[type] || 'bg-gray-500/10 text-gray-400';
   };
 
   const getTypeIcon = (type: string) => {
     const icons: Record<string, JSX.Element> = {
-      internship: <Briefcase className="w-5 h-5" />,
-      scholarship: <Award className="w-5 h-5" />,
-      summer_program: <GraduationCap className="w-5 h-5" />,
-      research: <Beaker className="w-5 h-5" />,
-      competition: <Trophy className="w-5 h-5" />,
-      conference: <Calendar className="w-5 h-5" />,
+      internship: <Briefcase className="w-4 h-4" />,
+      scholarship: <Award className="w-4 h-4" />,
+      summer_program: <GraduationCap className="w-4 h-4" />,
+      research: <Beaker className="w-4 h-4" />,
+      competition: <Trophy className="w-4 h-4" />,
+      conference: <Calendar className="w-4 h-4" />,
     };
-    return icons[type] || <Sparkles className="w-5 h-5" />;
+    return icons[type] || <Sparkles className="w-4 h-4" />;
   };
 
   const typeOptions = [
@@ -301,7 +291,7 @@ export default function Features({ onAuthClick }: FeaturesProps) {
   const getGradeLabel = (grade: string) => {
     const gradeLabels: Record<string, string> = {
       '9': 'Freshman',
-      '10': 'Sophomore', 
+      '10': 'Sophomore',
       '11': 'Junior',
       '12': 'Senior'
     };
@@ -321,78 +311,84 @@ export default function Features({ onAuthClick }: FeaturesProps) {
   }
 
   return (
-    <div className="min-h-screen bg-dark-navy pt-24 relative overflow-hidden">
-      {/* Animated background blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-bright-teal to-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -top-10 -right-20 w-96 h-96 bg-gradient-to-br from-royal-blue to-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob" style={{ animationDelay: '4s' }}></div>
+    <div className="min-h-screen bg-dark-navy relative">
+      {/* Background Gradient - Matching Home Page */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(37,99,235,0.1)_0%,transparent_50%)]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
-            <motion.div
-          className="mb-8 text-center"
-          initial={{ opacity: 0, y: -20 }}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+        <motion.div
+          className="mb-12 text-center"
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <motion.div
-            className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-2 mb-4 border border-white/20"
+          transition={{ duration: 0.6 }}
+        >
+          <motion.div
+            className="inline-flex items-center space-x-2 bg-white/5 backdrop-blur-md rounded-full px-4 py-1.5 mb-6 border border-white/10"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <Sparkles className="w-5 h-5 text-bright-teal" />
-            <span className="text-white font-inter font-medium">{filteredOpportunities.length} Opportunities Available</span>
+            <Sparkles className="w-4 h-4 text-secondary" />
+            <span className="text-white/80 text-sm font-medium">{filteredOpportunities.length} Opportunities Available</span>
           </motion.div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold mb-4 bg-gradient-to-r from-bright-teal to-royal-blue bg-clip-text text-transparent">
-            Explore Opportunities
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
+            <span className="text-white">Explore</span>{" "}
+            <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">Opportunities</span>
           </h1>
-          <p className="text-xl text-white max-w-3xl mx-auto">
-            Discover internships, scholarships, programs, and competitions tailored for high schoolers.
+          <p className="font-sans text-lg md:text-xl text-white/70 max-w-2xl mx-auto">
+            Find the perfect internship, scholarship, or competition to accelerate your future.
           </p>
-              </motion.div>
+        </motion.div>
 
-              <motion.div
-          className="mb-8 space-y-4 max-w-4xl mx-auto"
+        <motion.div
+          className="mb-12 space-y-4 max-w-5xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bright-teal" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search opportunities by title, organization, or description..."
-              className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border-2 border-white/20 rounded-2xl text-white placeholder-blue-200 transition-all duration-300
-                focus:outline-none focus:ring-2 focus:ring-bright-teal focus:border-bright-teal focus:bg-white/20"
-            />
+          {/* Search Bar */}
+          <div className="relative group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-emerald-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search opportunities..."
+                className="w-full pl-12 pr-4 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-white placeholder-white/40 transition-all duration-300
+                  focus:outline-none focus:ring-1 focus:ring-white/20 focus:border-white/20 focus:bg-white/10"
+              />
+            </div>
           </div>
 
+          {/* Filters */}
           <div className="flex flex-wrap gap-3 items-center justify-center">
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300">
-              <Filter className="w-4 h-4 text-bright-teal" />
-              <span className="text-sm font-inter font-medium text-white">Filters</span>
+            {/* Filter Label */}
+            <div className="hidden md:flex items-center gap-2 px-3 py-2 text-white/50">
+              <Filter className="w-4 h-4" />
+              <span className="text-sm font-medium">Filters:</span>
             </div>
-            
+
+            {/* Type Dropdown */}
             <div className="relative dropdown-container">
-              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300">
-                <Briefcase className="w-4 h-4 text-bright-teal" />
-                <button
-                  onClick={() => setIsTypeDropdownOpen(!isTypeDropdownOpen)}
-                  className="flex items-center gap-2 bg-transparent text-white text-sm font-inter font-medium focus:outline-none cursor-pointer rounded-full"
-                >
-                  <span>{typeOptions.find(opt => opt.value === typeFilter)?.label || 'All Types'}</span>
-                  <ChevronDown className={`w-3 h-3 text-bright-teal transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
-                </button>
-              </div>
-              
-              {/* Dropdown Menu */}
+              <button
+                onClick={() => setIsTypeDropdownOpen(!isTypeDropdownOpen)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${typeFilter !== 'all'
+                  ? 'bg-secondary/10 border-secondary/20 text-secondary'
+                  : 'bg-white/5 border-white/10 text-white/80 hover:bg-white/10'
+                  }`}
+              >
+                <Briefcase className="w-4 h-4" />
+                <span className="text-sm font-medium">{typeOptions.find(opt => opt.value === typeFilter)?.label || 'All Types'}</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${isTypeDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
               {isTypeDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-dark-navy border border-white/20 rounded-lg shadow-2xl z-[100] overflow-hidden">
+                <div className="absolute top-full left-0 mt-2 w-56 bg-dark-navy/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl z-[100] overflow-hidden py-1">
                   {typeOptions.map((option) => (
                     <button
                       key={option.value}
@@ -400,45 +396,46 @@ export default function Features({ onAuthClick }: FeaturesProps) {
                         setTypeFilter(option.value);
                         setIsTypeDropdownOpen(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-white text-sm font-inter hover:bg-white/10 transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm hover:bg-white/5 transition-colors"
                     >
-                      <span className="text-bright-teal flex-shrink-0">{option.icon}</span>
-                      <span className="flex-grow">{option.label}</span>
+                      <span className={`${typeFilter === option.value ? 'text-secondary' : 'text-white/50'} flex-shrink-0`}>{option.icon}</span>
+                      <span className={`${typeFilter === option.value ? 'text-white font-medium' : 'text-white/80'} flex-grow`}>{option.label}</span>
                       {typeFilter === option.value && (
-                        <span className="ml-auto text-bright-teal flex-shrink-0">✓</span>
+                        <span className="text-secondary ml-auto text-xs">✓</span>
                       )}
                     </button>
                   ))}
                 </div>
               )}
             </div>
-            
+
+            {/* Grade Dropdown */}
             <div className="relative dropdown-container">
-              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300">
-                <GraduationCap className="w-4 h-4 text-bright-teal" />
-                <button
-                  onClick={() => setIsGradeDropdownOpen(!isGradeDropdownOpen)}
-                  className="flex items-center gap-2 bg-transparent text-white text-sm font-inter font-medium focus:outline-none cursor-pointer rounded-full"
-                >
-                  <span>{gradeFilter === 'all' ? 'All Grades' : getGradeLabel(gradeFilter)}</span>
-                  <ChevronDown className={`w-3 h-3 text-bright-teal transition-transform ${isGradeDropdownOpen ? 'rotate-180' : ''}`} />
-                </button>
-              </div>
-              
-              {/* Dropdown Menu */}
+              <button
+                onClick={() => setIsGradeDropdownOpen(!isGradeDropdownOpen)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${gradeFilter !== 'all'
+                  ? 'bg-secondary/10 border-secondary/20 text-secondary'
+                  : 'bg-white/5 border-white/10 text-white/80 hover:bg-white/10'
+                  }`}
+              >
+                <GraduationCap className="w-4 h-4" />
+                <span className="text-sm font-medium">{gradeFilter === 'all' ? 'All Grades' : getGradeLabel(gradeFilter)}</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${isGradeDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
               {isGradeDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-dark-navy border border-white/20 rounded-lg shadow-2xl z-[100] overflow-hidden">
+                <div className="absolute top-full left-0 mt-2 w-56 bg-dark-navy/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl z-[100] overflow-hidden py-1">
                   <button
                     onClick={() => {
                       setGradeFilter('all');
                       setIsGradeDropdownOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-white text-sm font-inter hover:bg-white/10 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm hover:bg-white/5 transition-colors"
                   >
-                    <GraduationCap className="w-4 h-4 text-bright-teal flex-shrink-0" />
-                    <span className="flex-grow">All Grades</span>
+                    <GraduationCap className={`w-4 h-4 flex-shrink-0 ${gradeFilter === 'all' ? 'text-secondary' : 'text-white/50'}`} />
+                    <span className={`flex-grow ${gradeFilter === 'all' ? 'text-white font-medium' : 'text-white/80'}`}>All Grades</span>
                     {gradeFilter === 'all' && (
-                      <span className="ml-auto text-bright-teal flex-shrink-0">✓</span>
+                      <span className="text-secondary ml-auto text-xs">✓</span>
                     )}
                   </button>
                   {['9', '10', '11', '12'].map((grade) => (
@@ -448,12 +445,12 @@ export default function Features({ onAuthClick }: FeaturesProps) {
                         setGradeFilter(grade);
                         setIsGradeDropdownOpen(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-white text-sm font-inter hover:bg-white/10 transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm hover:bg-white/5 transition-colors"
                     >
-                      <GraduationCap className="w-4 h-4 text-bright-teal flex-shrink-0" />
-                      <span className="flex-grow">{getGradeLabel(grade)}</span>
+                      <GraduationCap className={`w-4 h-4 flex-shrink-0 ${gradeFilter === grade ? 'text-secondary' : 'text-white/50'}`} />
+                      <span className={`flex-grow ${gradeFilter === grade ? 'text-white font-medium' : 'text-white/80'}`}>{getGradeLabel(grade)}</span>
                       {gradeFilter === grade && (
-                        <span className="ml-auto text-bright-teal flex-shrink-0">✓</span>
+                        <span className="text-secondary ml-auto text-xs">✓</span>
                       )}
                     </button>
                   ))}
@@ -461,26 +458,28 @@ export default function Features({ onAuthClick }: FeaturesProps) {
               )}
             </div>
           </div>
-              </motion.div>
+        </motion.div>
 
         {filteredOpportunities.length === 0 ? (
-              <motion.div
-            className="text-center py-12 px-6 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20"
-            initial={{ opacity: 0, scale: 0.9 }}
+          <motion.div
+            className="text-center py-20 px-6 rounded-3xl border border-dashed border-white/10"
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Sparkles className="w-16 h-16 text-bright-teal mx-auto mb-4" />
-            <p className="text-white text-xl font-medium">
-              No opportunities found matching your criteria.
+            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search className="w-8 h-8 text-white/20" />
+            </div>
+            <h3 className="text-white text-xl font-medium mb-2">
+              No opportunities found
+            </h3>
+            <p className="text-white/50">
+              Try adjusting your filters or search terms to find what you're looking for.
             </p>
-            <p className="text-blue-200 mt-2">
-              Try adjusting your filters or search query.
-                </p>
-              </motion.div>
+          </motion.div>
         ) : (
-          <motion.div 
-            className="grid gap-6"
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -488,140 +487,110 @@ export default function Features({ onAuthClick }: FeaturesProps) {
             {filteredOpportunities.map((opp, index) => (
               <motion.div
                 key={opp.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="h-full"
               >
                 {/* CARD CONTAINER */}
-                <div className="relative group bg-white/10 backdrop-blur-md border-2 border-white/20 rounded-3xl p-6 transition-all duration-300 group-hover:border-white/40 group-hover:bg-white/20">
-                  {/* Glow effect on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${getTypeColor(opp.type)} rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300`}></div>
-                  
-                  {/* BOOKMARK BUTTON - TOP RIGHT CORNER */}
-                  <button
-                    onClick={() => handleSaveOpportunity(opp.id)}
-                    className="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full border border-white/20 transition-all duration-300 shadow-lg z-50 text-white hover:text-blue-400"
-                    style={{
-                      position: 'absolute',
-                      top: '16px',
-                      right: '16px',
-                      zIndex: 999
-                    }}
-                  >
-                    {isSaved(opp.id) ? (
-                      <BookmarkCheck className="w-5 h-5 text-bright-teal" />
-                    ) : (
-                      <Bookmark className="w-5 h-5 text-white" />
-                    )}
-                  </button>
+                <div className="relative group h-full flex flex-col bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:bg-white/[0.06] hover:border-white/20 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1">
 
-                  {/* Type badge with icon - top left */}
-                  <div className="absolute -top-3 -left-3 z-10">
-                    <div 
-                      className="flex items-center gap-2 px-4 py-2 rounded-full shadow-lg"
-                      style={{
-                        background: getTypeGradientStyle(opp.type),
-                      }}
-                    >
-                      <span className="text-white">
+                  {/* Card Header */}
+                  <div className="p-6 pb-4 flex-1">
+                    <div className="flex justify-between items-start mb-4">
+                      {/* Type Badge */}
+                      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border border-white/5 ${getLightTypeColor(opp.type)}`}>
                         {getTypeIcon(opp.type)}
-                      </span>
-                      <span className="text-white font-semibold text-sm capitalize">
-                        {opp.type.replace('_', ' ')}
-                      </span>
-                    </div>
-                  </div>
+                        <span className="capitalize">{opp.type.replace('_', ' ')}</span>
+                      </div>
 
-                    <div className="mt-8 mb-4">
-                      <h3 className="text-2xl font-bold text-white mb-2 line-clamp-2">
-                        {opp.title}
+                      {/* Bookmark */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSaveOpportunity(opp.id);
+                        }}
+                        className={`p-2 rounded-full transition-colors ${isSaved(opp.id) ? 'text-secondary bg-secondary/10' : 'text-white/40 hover:text-white hover:bg-white/10'}`}
+                      >
+                        {isSaved(opp.id) ? (
+                          <BookmarkCheck className="w-5 h-5" />
+                        ) : (
+                          <Bookmark className="w-5 h-5" />
+                        )}
+                      </button>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-white mb-2 leading-tight group-hover:text-primary-400 transition-colors">
+                      {opp.title}
                     </h3>
-                      <p className="text-bright-teal font-semibold text-lg">
-                        {opp.organization}
-                      </p>
-                    </div>
 
-                    {/* Metadata */}
-                    <div className="flex flex-wrap gap-3 mb-4">
+                    <div className="flex items-center gap-2 mb-4 text-white/60 text-sm">
+                      <span className="font-medium text-white/80">{opp.organization}</span>
                       {opp.deadline && (
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
-                          <Calendar className="w-4 h-4 text-bright-teal" />
-                          <span className="text-white text-sm font-medium">
-                            {new Date(opp.deadline).toLocaleDateString()}
+                        <>
+                          <span>•</span>
+                          <span className={`${new Date(opp.deadline) < new Date() ? 'text-red-400' : ''}`}>
+                            {new Date(opp.deadline).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                           </span>
-                    </div>
-                      )}
-                      {opp.location && (
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
-                          <MapPin className="w-4 h-4 text-bright-teal" />
-                          <span className="text-white text-sm font-medium">{opp.location}</span>
-                        </div>
+                        </>
                       )}
                     </div>
 
-                    <p className="text-white mb-4 line-clamp-3 leading-relaxed">
+                    <p className="text-white/60 text-sm leading-relaxed line-clamp-3 mb-4">
                       {opp.description}
                     </p>
 
-                    {/* Interest tags */}
+                    {/* Tags */}
                     {opp.interests && opp.interests.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {opp.interests.map((interest, idx) => (
-                          <span 
+                      <div className="flex flex-wrap gap-1.5 mt-auto">
+                        {opp.interests.slice(0, 3).map((interest, idx) => (
+                          <span
                             key={idx}
-                            className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-white text-xs font-medium border border-white/20 hover:bg-white/20 transition-colors"
+                            className="px-2 py-0.5 bg-white/5 rounded text-[10px] text-white/50 border border-white/5"
                           >
                             {interest}
                           </span>
                         ))}
+                        {opp.interests.length > 3 && (
+                          <span className="px-2 py-0.5 text-[10px] text-white/40">+ {opp.interests.length - 3}</span>
+                        )}
                       </div>
                     )}
+                  </div>
 
-                    {/* Apply button with neon gradient */}
-                    <div 
-                      className="w-full cursor-pointer"
-                      style={{ cursor: 'pointer' }}
+                  {/* Card Footer / Action */}
+                  <div className="p-4 border-t border-white/5 bg-white/[0.02]">
+                    <button
                       onClick={() => handleApply(opp.application_url)}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/5 hover:bg-primary sm:hover:bg-primary text-white text-sm font-medium transition-all group-hover:bg-primary"
                     >
-                      <motion.button
-                        className="w-full py-3 px-6 bg-gradient-to-r from-[#00C6FF] to-[#0072FF] text-white font-bold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 group"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        style={{ 
-                          cursor: 'pointer',
-                          pointerEvents: 'auto',
-                          border: 'none',
-                          outline: 'none'
-                        }}
-                      >
-                        <span>Apply Now</span>
-                        <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </motion.button>
+                      <span>View Details</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </motion.div>
             ))}
-                </motion.div>
+          </motion.div>
         )}
 
         {/* Sign-up CTA Section */}
         <motion.div
-          className="mt-16 text-center py-12 px-6 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-20 text-center py-16 px-6 border-t border-white/10"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Find More Opportunities
           </h2>
-          <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-white/60 text-lg mb-8 max-w-2xl mx-auto">
             Sign up for Networkly to discover thousands more opportunities, get personalized recommendations, and never miss a deadline.
           </p>
           <InteractiveHoverButton
-            text="Sign Up to Find More Opportunities"
+            text="Sign Up Now"
             onClick={onAuthClick}
-            className="text-lg px-8 py-4"
+            className="bg-primary text-white border-none px-8 py-3"
           />
         </motion.div>
       </div>

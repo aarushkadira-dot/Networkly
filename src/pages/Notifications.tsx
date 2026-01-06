@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { Bell, Check, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
+import { Button } from '../components/ui/liquid-glass-button';
 import type { Database } from '../lib/database.types';
 import { Link } from 'react-router-dom';
 
@@ -88,23 +87,28 @@ function Notifications() {
     return (
       <div className="min-h-screen bg-dark-navy flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-electric-blue border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-charcoal">Loading notifications...</p>
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white/60 font-sans">Loading notifications...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-dark-navy text-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-dark-navy relative">
+      {/* Background Gradient */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(37,99,235,0.1)_0%,transparent_50%)]" />
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-royal-purple mb-2">
+            <h1 className="font-heading text-3xl md:text-4xl font-bold text-white mb-2">
               Notifications
             </h1>
             {unreadCount > 0 && (
-              <p className="text-charcoal">
+              <p className="text-white/60 font-sans">
                 You have {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
               </p>
             )}
@@ -118,36 +122,36 @@ function Notifications() {
         </div>
 
         {notifications.length === 0 ? (
-          <Card className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-              <Bell className="w-8 h-8 text-gray-400" />
+          <div className="bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-2xl text-center py-12 px-6">
+            <div className="w-16 h-16 bg-white/5 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <Bell className="w-8 h-8 text-white/30" />
             </div>
-            <h3 className="text-xl font-bold text-charcoal mb-2">
+            <h3 className="font-heading text-xl font-semibold text-white mb-2">
               No Notifications Yet
             </h3>
-            <p className="text-gray-600">
+            <p className="text-white/50 font-sans">
               We'll notify you about deadlines, new opportunities, and profile updates.
             </p>
-          </Card>
+          </div>
         ) : (
           <div className="space-y-3">
             {notifications.map((notification) => (
-              <Card
+              <div
                 key={notification.id}
-                className={`${!notification.is_read ? 'border-l-4 border-electric-blue' : ''}`}
+                className={`bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-2xl p-4 transition-all hover:bg-white/[0.06] ${!notification.is_read ? 'border-l-4 border-l-primary' : ''}`}
               >
                 <div className="flex items-start gap-4">
                   <div className={`p-3 rounded-lg ${getNotificationColor(notification.type)}`}>
                     {getNotificationIcon(notification.type)}
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-charcoal mb-1">
+                    <h3 className="font-heading font-semibold text-white mb-1">
                       {notification.title}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-2">
+                    <p className="text-white/60 text-sm mb-2 font-sans">
                       {notification.message}
                     </p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <div className="flex items-center gap-4 text-xs text-white/40">
                       <span>
                         {new Date(notification.created_at).toLocaleDateString()} at{' '}
                         {new Date(notification.created_at).toLocaleTimeString([], {
@@ -158,7 +162,7 @@ function Notifications() {
                       {notification.link && (
                         <Link
                           to={notification.link}
-                          className="text-electric-blue hover:underline"
+                          className="text-secondary hover:underline"
                         >
                           View
                         </Link>
@@ -169,7 +173,7 @@ function Notifications() {
                     {!notification.is_read && (
                       <button
                         onClick={() => markAsRead(notification.id)}
-                        className="p-2 hover:bg-blue-50 text-electric-blue rounded-lg transition-colors"
+                        className="p-2 hover:bg-primary/10 text-primary rounded-lg transition-colors"
                         title="Mark as read"
                       >
                         <Check className="w-5 h-5" />
@@ -177,14 +181,14 @@ function Notifications() {
                     )}
                     <button
                       onClick={() => deleteNotification(notification.id)}
-                      className="p-2 hover:bg-red-50 text-red-500 rounded-lg transition-colors"
+                      className="p-2 hover:bg-red-500/10 text-red-400 rounded-lg transition-colors"
                       title="Delete"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}

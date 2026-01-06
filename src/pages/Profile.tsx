@@ -3,11 +3,11 @@ import { User, School, MapPin, Briefcase, Award, Code } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
-import { Input } from '../components/Input';
-import { Badge } from '../components/Badge';
-import { LoadingSpinner } from '../components/LoadingSpinner';
+import { Card } from '../components/ui/card';
+import { Button } from '../components/ui/liquid-glass-button';
+import { Input } from '../components/ui/input';
+import { Badge } from '../components/ui/badge';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import type { Database } from '../lib/database.types';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 
@@ -128,15 +128,20 @@ function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-navy text-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <motion.div 
+    <div className="min-h-screen bg-dark-navy relative">
+      {/* Background Gradient - Standard Pattern */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(37,99,235,0.1)_0%,transparent_50%)]" />
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+        <motion.div
           className="flex justify-between items-center mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-royal-purple">
+          <h1 className="font-heading text-3xl md:text-4xl font-bold text-white">
             {editing ? 'Edit Profile' : 'My Profile'}
           </h1>
           {!editing ? (
@@ -171,8 +176,8 @@ function Profile() {
         </motion.div>
 
         <AnimatePresence mode="wait">
-        {editing ? (
-            <motion.div 
+          {editing ? (
+            <motion.div
               className="space-y-6"
               key="editing"
               initial={{ opacity: 0, x: -20 }}
@@ -180,281 +185,281 @@ function Profile() {
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
             >
-            <Card>
-              <h2 className="text-xl font-bold text-white mb-4">Basic Information</h2>
-              <div className="space-y-4">
-                <Input
-                  label="Full Name"
-                  value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  placeholder="Your name"
-                />
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1.5">
-                    Age
-                  </label>
-                  <input
-                    type="number"
-                    min="13"
-                    max="19"
-                    value={formData.age}
-                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                    placeholder="Your age"
-                    className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
-                      focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent"
+              <Card>
+                <h2 className="text-xl font-bold text-white mb-4">Basic Information</h2>
+                <div className="space-y-4">
+                  <Input
+                    label="Full Name"
+                    value={formData.full_name}
+                    onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                    placeholder="Your name"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1.5">
-                    Gender
-                  </label>
-                  <select
-                    value={formData.gender}
-                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                    className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-1.5">
+                      Age
+                    </label>
+                    <input
+                      type="number"
+                      min="13"
+                      max="19"
+                      value={formData.age}
+                      onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                      placeholder="Your age"
+                      className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
                       focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent"
-                  >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="non-binary">Non-binary</option>
-                    <option value="prefer-not-to-say">Prefer not to say</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <Input
-                  label="School"
-                  value={formData.school}
-                  onChange={(e) => setFormData({ ...formData, school: e.target.value })}
-                  placeholder="Your high school"
-                />
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1.5">
-                    Grade Level
-                  </label>
-                  <select
-                    value={formData.grade_level}
-                    onChange={(e) => setFormData({ ...formData, grade_level: e.target.value })}
-                    className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
-                      focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent"
-                  >
-                    <option value="">Select grade</option>
-                    <option value="9">9th Grade</option>
-                    <option value="10">10th Grade</option>
-                    <option value="11">11th Grade</option>
-                    <option value="12">12th Grade</option>
-                  </select>
-                </div>
-                <Input
-                  label="Location"
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  placeholder="City, State"
-                />
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1.5">
-                    Bio
-                  </label>
-                  <textarea
-                    value={formData.bio}
-                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                    placeholder="Tell us about yourself..."
-                    rows={4}
-                    className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
-                      focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent resize-none"
-                  />
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <h2 className="text-xl font-bold text-charcoal mb-4">Tags</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-charcoal mb-2">
-                    Add Tags
-                  </label>
-                  <div className="flex gap-2">
-                    <select
-                      value={tagType}
-                      onChange={(e) => setTagType(e.target.value as typeof tagType)}
-                      className="px-3 py-2 border-2 border-gray-300 rounded-lg"
-                    >
-                      <option value="interests">Interests</option>
-                      <option value="skills">Skills</option>
-                      <option value="achievements">Achievements</option>
-                      <option value="projects">Projects</option>
-                    </select>
-                    <Input
-                      value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
-                      placeholder="Add a tag..."
-                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                     />
-                    <Button onClick={addTag}>Add</Button>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-1.5">
+                      Gender
+                    </label>
+                    <select
+                      value={formData.gender}
+                      onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                      className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
+                      focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent"
+                    >
+                      <option value="">Select gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="non-binary">Non-binary</option>
+                      <option value="prefer-not-to-say">Prefer not to say</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <Input
+                    label="School"
+                    value={formData.school}
+                    onChange={(e) => setFormData({ ...formData, school: e.target.value })}
+                    placeholder="Your high school"
+                  />
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-1.5">
+                      Grade Level
+                    </label>
+                    <select
+                      value={formData.grade_level}
+                      onChange={(e) => setFormData({ ...formData, grade_level: e.target.value })}
+                      className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
+                      focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent"
+                    >
+                      <option value="">Select grade</option>
+                      <option value="9">9th Grade</option>
+                      <option value="10">10th Grade</option>
+                      <option value="11">11th Grade</option>
+                      <option value="12">12th Grade</option>
+                    </select>
+                  </div>
+                  <Input
+                    label="Location"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="City, State"
+                  />
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-1.5">
+                      Bio
+                    </label>
+                    <textarea
+                      value={formData.bio}
+                      onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                      placeholder="Tell us about yourself..."
+                      rows={4}
+                      className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition-all duration-200
+                      focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent resize-none"
+                    />
                   </div>
                 </div>
+              </Card>
 
-                {(['interests', 'skills', 'achievements', 'projects'] as const).map((type) => (
-                  <div key={type}>
-                    <label className="block text-sm font-medium text-charcoal mb-2 capitalize">
-                      {type}
+              <Card>
+                <h2 className="text-xl font-bold text-charcoal mb-4">Tags</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal mb-2">
+                      Add Tags
                     </label>
-                    <div className="flex flex-wrap gap-2">
-                      {formData[type].map((item, index) => (
-                        <Badge key={index} variant="blue" className="cursor-pointer">
-                          {item}
-                          <button
-                            onClick={() => removeTag(type, index)}
-                            className="ml-2 hover:text-red-600"
-                          >
-                            ×
-                          </button>
-                        </Badge>
-                      ))}
-                      {formData[type].length === 0 && (
-                        <p className="text-gray-400 text-sm">No {type} added yet</p>
+                    <div className="flex gap-2">
+                      <select
+                        value={tagType}
+                        onChange={(e) => setTagType(e.target.value as typeof tagType)}
+                        className="px-3 py-2 border-2 border-gray-300 rounded-lg"
+                      >
+                        <option value="interests">Interests</option>
+                        <option value="skills">Skills</option>
+                        <option value="achievements">Achievements</option>
+                        <option value="projects">Projects</option>
+                      </select>
+                      <Input
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                        placeholder="Add a tag..."
+                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                      />
+                      <Button onClick={addTag}>Add</Button>
+                    </div>
+                  </div>
+
+                  {(['interests', 'skills', 'achievements', 'projects'] as const).map((type) => (
+                    <div key={type}>
+                      <label className="block text-sm font-medium text-charcoal mb-2 capitalize">
+                        {type}
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {formData[type].map((item, index) => (
+                          <Badge key={index} variant="blue" className="cursor-pointer">
+                            {item}
+                            <button
+                              onClick={() => removeTag(type, index)}
+                              className="ml-2 hover:text-red-600"
+                            >
+                              ×
+                            </button>
+                          </Badge>
+                        ))}
+                        {formData[type].length === 0 && (
+                          <p className="text-gray-400 text-sm">No {type} added yet</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </motion.div>
+          ) : (
+            <motion.div
+              className="space-y-6"
+              key="viewing"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div variants={fadeInUp}>
+                <Card>
+                  <div className="flex items-start gap-6">
+                    <motion.div
+                      className="w-24 h-24 bg-gradient-to-br from-electric-blue to-soft-teal rounded-full flex items-center justify-center flex-shrink-0"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                      <User className="w-12 h-12 text-white" />
+                    </motion.div>
+                    <div className="flex-1">
+                      <h2 className="text-2xl font-bold text-charcoal mb-2">
+                        {profile?.full_name || 'Complete your profile'}
+                      </h2>
+                      <div className="flex flex-wrap gap-4 text-gray-600 mb-4">
+                        {profile?.school && (
+                          <div className="flex items-center gap-1.5">
+                            <School className="w-4 h-4" />
+                            <span>{profile.school}</span>
+                          </div>
+                        )}
+                        {profile?.age && (
+                          <div className="flex items-center gap-1.5">
+                            <Award className="w-4 h-4" />
+                            <span>Age {profile.age}</span>
+                          </div>
+                        )}
+                        {profile?.grade_level && (
+                          <div className="flex items-center gap-1.5">
+                            <Award className="w-4 h-4" />
+                            <span>Grade {profile.grade_level}</span>
+                          </div>
+                        )}
+                        {profile?.location && (
+                          <div className="flex items-center gap-1.5">
+                            <MapPin className="w-4 h-4" />
+                            <span>{profile.location}</span>
+                          </div>
+                        )}
+                      </div>
+                      {profile?.bio && (
+                        <p className="text-gray-600 leading-relaxed">{profile.bio}</p>
                       )}
                     </div>
                   </div>
-                ))}
-              </div>
-            </Card>
-          </motion.div>
-        ) : (
-          <motion.div 
-            className="space-y-6"
-            key="viewing"
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.div variants={fadeInUp}>
-            <Card>
-              <div className="flex items-start gap-6">
-                  <motion.div 
-                    className="w-24 h-24 bg-gradient-to-br from-electric-blue to-soft-teal rounded-full flex items-center justify-center flex-shrink-0"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                  >
-                  <User className="w-12 h-12 text-white" />
-                  </motion.div>
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-charcoal mb-2">
-                    {profile?.full_name || 'Complete your profile'}
-                  </h2>
-                  <div className="flex flex-wrap gap-4 text-gray-600 mb-4">
-                    {profile?.school && (
-                      <div className="flex items-center gap-1.5">
-                        <School className="w-4 h-4" />
-                        <span>{profile.school}</span>
-                      </div>
-                    )}
-                    {profile?.age && (
-                      <div className="flex items-center gap-1.5">
-                        <Award className="w-4 h-4" />
-                        <span>Age {profile.age}</span>
-                      </div>
-                    )}
-                    {profile?.grade_level && (
-                      <div className="flex items-center gap-1.5">
-                        <Award className="w-4 h-4" />
-                        <span>Grade {profile.grade_level}</span>
-                      </div>
-                    )}
-                    {profile?.location && (
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4" />
-                        <span>{profile.location}</span>
-                      </div>
-                    )}
-                  </div>
-                  {profile?.bio && (
-                    <p className="text-gray-600 leading-relaxed">{profile.bio}</p>
-                  )}
-                </div>
-              </div>
-            </Card>
+                </Card>
+              </motion.div>
+
+              {profile?.interests && profile.interests.length > 0 && (
+                <motion.div variants={fadeInUp}>
+                  <Card>
+                    <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
+                      <Briefcase className="w-5 h-5 text-electric-blue" />
+                      Interests
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.interests.map((interest, index) => (
+                        <Badge key={index} variant="blue">{interest}</Badge>
+                      ))}
+                    </div>
+                  </Card>
+                </motion.div>
+              )}
+
+              {profile?.skills && profile.skills.length > 0 && (
+                <motion.div variants={fadeInUp}>
+                  <Card>
+                    <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
+                      <Code className="w-5 h-5 text-emerald-green" />
+                      Skills
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.skills.map((skill, index) => (
+                        <Badge key={index} variant="green">{skill}</Badge>
+                      ))}
+                    </div>
+                  </Card>
+                </motion.div>
+              )}
+
+              {profile?.achievements && profile.achievements.length > 0 && (
+                <motion.div variants={fadeInUp}>
+                  <Card>
+                    <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
+                      <Award className="w-5 h-5 text-coral-peach" />
+                      Achievements
+                    </h3>
+                    <ul className="space-y-2">
+                      {profile.achievements.map((achievement, index) => (
+                        <li key={index} className="flex items-start gap-2 text-gray-600">
+                          <span className="w-1.5 h-1.5 bg-coral-peach rounded-full mt-2 flex-shrink-0"></span>
+                          <span>{achievement}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </Card>
+                </motion.div>
+              )}
+
+              {profile?.projects && profile.projects.length > 0 && (
+                <motion.div variants={fadeInUp}>
+                  <Card>
+                    <h3 className="text-lg font-bold text-charcoal mb-3">Projects</h3>
+                    <ul className="space-y-2">
+                      {profile.projects.map((project, index) => (
+                        <li key={index} className="flex items-start gap-2 text-gray-600">
+                          <span className="w-1.5 h-1.5 bg-soft-teal rounded-full mt-2 flex-shrink-0"></span>
+                          <span>{project}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </Card>
+                </motion.div>
+              )}
+
+              {!profile?.full_name && (
+                <motion.div variants={fadeInUp}>
+                  <Card className="bg-warm-beige border-2 border-coral-peach">
+                    <p className="text-charcoal text-center">
+                      Complete your profile to start applying for opportunities!
+                    </p>
+                  </Card>
+                </motion.div>
+              )}
             </motion.div>
-
-            {profile?.interests && profile.interests.length > 0 && (
-              <motion.div variants={fadeInUp}>
-              <Card>
-                <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
-                  <Briefcase className="w-5 h-5 text-electric-blue" />
-                  Interests
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {profile.interests.map((interest, index) => (
-                    <Badge key={index} variant="blue">{interest}</Badge>
-                  ))}
-                </div>
-              </Card>
-              </motion.div>
-            )}
-
-            {profile?.skills && profile.skills.length > 0 && (
-              <motion.div variants={fadeInUp}>
-              <Card>
-                <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
-                  <Code className="w-5 h-5 text-emerald-green" />
-                  Skills
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {profile.skills.map((skill, index) => (
-                    <Badge key={index} variant="green">{skill}</Badge>
-                  ))}
-                </div>
-              </Card>
-              </motion.div>
-            )}
-
-            {profile?.achievements && profile.achievements.length > 0 && (
-              <motion.div variants={fadeInUp}>
-              <Card>
-                <h3 className="text-lg font-bold text-charcoal mb-3 flex items-center gap-2">
-                  <Award className="w-5 h-5 text-coral-peach" />
-                  Achievements
-                </h3>
-                <ul className="space-y-2">
-                  {profile.achievements.map((achievement, index) => (
-                    <li key={index} className="flex items-start gap-2 text-gray-600">
-                      <span className="w-1.5 h-1.5 bg-coral-peach rounded-full mt-2 flex-shrink-0"></span>
-                      <span>{achievement}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-              </motion.div>
-            )}
-
-            {profile?.projects && profile.projects.length > 0 && (
-              <motion.div variants={fadeInUp}>
-              <Card>
-                <h3 className="text-lg font-bold text-charcoal mb-3">Projects</h3>
-                <ul className="space-y-2">
-                  {profile.projects.map((project, index) => (
-                    <li key={index} className="flex items-start gap-2 text-gray-600">
-                      <span className="w-1.5 h-1.5 bg-soft-teal rounded-full mt-2 flex-shrink-0"></span>
-                      <span>{project}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-              </motion.div>
-            )}
-
-            {!profile?.full_name && (
-              <motion.div variants={fadeInUp}>
-              <Card className="bg-warm-beige border-2 border-coral-peach">
-                <p className="text-charcoal text-center">
-                  Complete your profile to start applying for opportunities!
-                </p>
-              </Card>
-              </motion.div>
-            )}
-          </motion.div>
-        )}
+          )}
         </AnimatePresence>
       </div>
     </div>

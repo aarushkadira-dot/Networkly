@@ -79,7 +79,7 @@ function AnimatedHero({ }: AnimatedHeroProps) {
             <Link to="/students">
               <InteractiveHoverButton
                 text="Explore Matches"
-                className="bg-gradient-to-r from-primary to-secondary text-white border-none px-8 py-3 hover:from-primary-600 hover:to-secondary-600 [&>span:nth-child(4)]:group-hover:text-white"
+                className="bg-primary text-white px-6 py-3 hover:bg-primary-600 [&>span:nth-child(4)]:group-hover:text-white"
               />
             </Link>
             <InteractiveHoverButton
