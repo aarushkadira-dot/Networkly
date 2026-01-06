@@ -1,11 +1,10 @@
-"use client"
-
 import React, {
   useCallback,
   useEffect,
   useState,
 } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { useInterval } from "../../hooks/useInterval"
 
 interface Logo {
   name: string
@@ -139,13 +138,11 @@ export function LogoCarousel({ columnCount = 2, logos }: LogoCarouselProps) {
   const [currentTime, setCurrentTime] = useState(0)
 
   const updateTime = useCallback(() => {
-    setCurrentTime((prevTime) => prevTime + 100)
+    setCurrentTime((prevTime) => prevTime + 500)
   }, [])
 
-  useEffect(() => {
-    const intervalId = setInterval(updateTime, 100)
-    return () => clearInterval(intervalId)
-  }, [updateTime])
+  // Optimized from 100ms to 500ms for better performance
+  useInterval(updateTime, 500)
 
   useEffect(() => {
     const distributedLogos = distributeLogos(logos, columnCount)

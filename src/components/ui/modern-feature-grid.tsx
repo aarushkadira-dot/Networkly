@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 import { LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -34,7 +34,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
         aria-labelledby={titleId}
         {...props}
       >
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-50px" }}
@@ -86,7 +86,7 @@ export const FeatureGrid = React.forwardRef<HTMLElement, FeatureGridProps>(
               {sectionDescription}
             </p>
           </div>
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}

@@ -79,34 +79,19 @@ export default {
           900: '#111827',
           950: '#030712',
         },
-        // Legacy colors for backward compatibility (will be phased out)
+        // Brand colors for glow effect
+        brand: "hsl(var(--brand))",
+        "brand-foreground": "hsl(var(--brand-foreground))",
+
+        // Legacy colors for backward compatibility (restored to fix visual regressions)
         'dark-navy': '#111827',
         'deep-blue': '#1E3A8A',
         'royal-blue': '#2563EB',
         'bright-teal': '#06B6D4',
-        'background': '#F9FAFB',
-        'text-primary': '#111827',
-        'text-secondary': '#4B5563',
-        'glass-white': 'rgba(255, 255, 255, 0.8)',
-        'navy': '#111827',
-        'blue': '#2563EB',
-        'teal': '#06B6D4',
-        'electric-blue': '#2563EB',
-        'emerald-green': '#06B6D4',
-        'royal-purple': '#111827',
-        'soft-teal': '#06B6D4',
-        'warm-beige': '#F9FAFB',
-        'coral-peach': '#06B6D4',
-        'charcoal': '#111827',
-        // Legacy CTA and accent colors (mapped to new system)
-        'cta': '#2563EB', // maps to primary
-        'accent-blue': '#1D4ED8', // maps to primary-600
-        'accent-lime': '#10B981', // maps to accent
-        'accent-teal': '#06B6D4', // maps to secondary
-        'accent-coral': '#F97316', // maps to accent variant
-        // Brand colors for glow effect
-        brand: "hsl(var(--brand))",
-        "brand-foreground": "hsl(var(--brand-foreground))",
+        'emerald-green': '#10B981',
+        'soft-peach': '#FFFAF0',
+        'lavender': '#E6E6FA',
+        'sky-blue': '#87CEEB',
       },
       boxShadow: {
         'soft': '0 2px 8px rgba(0, 0, 0, 0.08)',

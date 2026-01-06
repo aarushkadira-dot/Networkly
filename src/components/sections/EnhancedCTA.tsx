@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { 
-  ArrowRight, 
-  Bookmark, 
-  ExternalLink, 
-  Share2, 
+import {
+  ArrowRight,
+  Bookmark,
+  ExternalLink,
+  Share2,
   Sparkles,
   Heart,
   Star,
@@ -38,10 +38,10 @@ export function CTAButton({
   glow = false,
 }: CTAButtonProps) {
   const variants = {
-    primary: 'bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-600 text-white',
+    primary: 'bg-primary hover:bg-primary-600 text-white',
     secondary: 'bg-secondary hover:bg-secondary-600 text-white',
     success: 'bg-accent hover:bg-accent-600 text-white',
-    gradient: 'bg-gradient-to-r from-primary to-secondary hover:from-primary-600 hover:to-secondary-600 hover:shadow-2xl text-white',
+    gradient: 'bg-primary hover:bg-primary-600 hover:shadow-2xl text-white',
   };
 
   const sizes = {
@@ -72,7 +72,7 @@ export function CTAButton({
     >
       {/* Shine effect */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+        className="absolute inset-0 bg-white/20 opacity-0"
         initial={{ x: '-100%', opacity: 0 }}
         whileHover={{ x: '200%', opacity: 0.2 }}
         transition={{ duration: 0.6 }}
@@ -98,11 +98,10 @@ export function ActionButton({ icon: Icon, label, onClick, active = false, count
   return (
     <motion.button
       onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-        active
-          ? 'bg-gradient-to-r from-primary to-secondary text-white'
+      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all ${active
+          ? 'bg-primary text-white'
           : 'bg-white text-neutral-700 hover:bg-neutral-50 border-2 border-neutral-200'
-      }`}
+        }`}
       whileHover={{ scale: 1.05, y: -2 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -114,9 +113,8 @@ export function ActionButton({ icon: Icon, label, onClick, active = false, count
       </motion.div>
       <span>{label}</span>
       {count !== undefined && (
-        <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-          active ? 'bg-white/20' : 'bg-neutral-100'
-        }`}>
+        <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${active ? 'bg-white/20' : 'bg-neutral-100'
+          }`}>
           {count}
         </span>
       )}
@@ -134,13 +132,13 @@ export function FloatingActionButtons() {
       transition={{ duration: 0.5, staggerChildren: 0.1 }}
     >
       {[
-        { icon: Bell, label: 'Notifications', color: 'from-primary to-primary-600' },
-        { icon: Bookmark, label: 'Saved', color: 'from-accent to-accent-600' },
-        { icon: Share2, label: 'Share', color: 'from-secondary to-secondary-600' },
+        { icon: Bell, label: 'Notifications', color: 'bg-primary' },
+        { icon: Bookmark, label: 'Saved', color: 'bg-accent' },
+        { icon: Share2, label: 'Share', color: 'bg-secondary' },
       ].map((action, index) => (
         <motion.button
           key={index}
-          className={`w-14 h-14 rounded-full bg-gradient-to-br ${action.color} shadow-lg flex items-center justify-center text-white group relative`}
+          className={`w-14 h-14 rounded-full ${action.color} shadow-lg flex items-center justify-center text-white group relative`}
           whileHover={{ scale: 1.1, rotate: 5 }}
           whileTap={{ scale: 0.9 }}
           initial={{ opacity: 0, x: 50 }}
@@ -148,7 +146,7 @@ export function FloatingActionButtons() {
           transition={{ delay: index * 0.1 }}
         >
           <action.icon className="w-6 h-6" />
-          
+
           {/* Tooltip */}
           <span className="absolute right-16 bg-primary-900 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             {action.label}
@@ -169,10 +167,10 @@ interface ShareModalProps {
 
 export function ShareModal({ isOpen, onClose, title, url = window.location.href }: ShareModalProps) {
   const shareOptions = [
-    { name: 'Copy Link', icon: ExternalLink, color: 'from-neutral-500 to-neutral-600' },
-    { name: 'Facebook', icon: Share2, color: 'from-primary-600 to-primary-700' },
-    { name: 'Twitter', icon: Send, color: 'from-sky-400 to-sky-500' },
-    { name: 'Email', icon: Send, color: 'from-accent to-primary-700' },
+    { name: 'Copy Link', icon: ExternalLink, color: 'bg-neutral-500' },
+    { name: 'Facebook', icon: Share2, color: 'bg-blue-600' },
+    { name: 'Twitter', icon: Send, color: 'bg-sky-400' },
+    { name: 'Email', icon: Send, color: 'bg-accent' },
   ];
 
   const handleShare = (platform: string) => {
@@ -195,7 +193,7 @@ export function ShareModal({ isOpen, onClose, title, url = window.location.href 
         exit={{ opacity: 0 }}
         onClick={onClose}
       />
-      
+
       <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
         <motion.div
           className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
@@ -204,7 +202,7 @@ export function ShareModal({ isOpen, onClose, title, url = window.location.href 
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
-          <div className="bg-gradient-to-r from-primary to-primary-600 p-6">
+          <div className="bg-primary p-6">
             <h3 className="text-2xl font-bold text-white mb-2">Share with Friends!</h3>
             <p className="text-white/90 text-sm">{title}</p>
           </div>
@@ -214,7 +212,7 @@ export function ShareModal({ isOpen, onClose, title, url = window.location.href 
               <motion.button
                 key={index}
                 onClick={() => handleShare(option.name)}
-                className={`w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r ${option.color} text-white font-medium shadow-md`}
+                className={`w-full flex items-center gap-4 p-4 rounded-xl ${option.color} text-white font-medium shadow-md`}
                 whileHover={{ scale: 1.02, x: 5 }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, x: -20 }}
@@ -255,7 +253,7 @@ export function MegaCTA() {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Your Future Starts Here!
           </h2>
-          
+
           <p className="text-white/90 text-xl mb-8 max-w-2xl mx-auto">
             Join thousands of students discovering life-changing opportunities every day.
             Your dream internship, scholarship, or program is waiting!
@@ -265,7 +263,7 @@ export function MegaCTA() {
             <CTAButton variant="gradient" icon={Sparkles} size="lg" pulse glow>
               Explore Opportunities
             </CTAButton>
-            
+
             <CTAButton variant="secondary" icon={Star} size="lg">
               View Success Stories
             </CTAButton>

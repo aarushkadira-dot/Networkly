@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useRef, useState, useEffect } from 'react';
 import { Trophy, GraduationCap, Users, Award, Globe, ChevronLeft, ChevronRight, Presentation, Calendar } from 'lucide-react';

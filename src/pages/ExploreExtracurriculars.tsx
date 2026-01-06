@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Filter, Sparkles, TrendingUp, Star, Brain, Mail, Copy } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { Card } from '../components/Card';
-import { CTAButton } from '../components/EnhancedCTA';
+import { Card } from '../components/ui/card';
+import { CTAButton } from '../components/sections/EnhancedCTA';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, LineChart, Line } from 'recharts';
 
 type Program = {

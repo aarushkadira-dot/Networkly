@@ -1,7 +1,7 @@
 import { Mail, Linkedin, Code, Coffee, Rocket, Heart, Quote, Target, Users, Zap, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Card } from '../components/Card';
+import { Card } from '../components/ui/card';
 import { fadeInUp, staggerContainer } from '../lib/animations';
 import { Link } from 'react-router-dom';
 

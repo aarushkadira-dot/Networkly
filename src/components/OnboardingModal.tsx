@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Modal } from './Modal';
-import { Input } from './Input';
-import { Button } from './Button';
+import { Modal } from './common/Modal';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -51,7 +51,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
 
   const loadProfile = async () => {
     if (!user) return;
-    
+
     const { data } = await supabase
       .from('profiles')
       .select('*')
@@ -141,7 +141,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={() => {}} title={`Welcome to Networkly! (Step ${step}/3)`} showCloseButton={false}>
+    <Modal isOpen={isOpen} onClose={() => { }} title={`Welcome to Networkly! (Step ${step}/3)`} showCloseButton={false}>
       <div className="space-y-6">
         {/* Progress bar */}
         <div className="w-full bg-gray-200 rounded-full h-2">

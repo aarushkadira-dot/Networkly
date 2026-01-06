@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -227,7 +226,7 @@ function FeatureStepsAnimation({
                 className={cn(
                   "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 flex-shrink-0",
                   index === currentFeature
-                    ? "bg-gradient-to-br from-blue-500 to-purple-500 border-blue-400 text-white scale-110"
+                    ? "bg-blue-500 border-blue-400 text-white scale-110"
                     : index < currentFeature
                       ? "bg-white/10 border-white/30 text-white/70"
                       : "bg-white/5 border-white/20",

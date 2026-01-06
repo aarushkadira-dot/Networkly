@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ContainerScroll } from '../components/ui/container-scroll-animation';
 import { InteractiveHoverButton } from '../components/ui/interactive-hover-button';
 import SectionWithMockup from '../components/ui/section-with-mockup';
+import { SmartDiscoverySection } from '../components/ui/smart-discovery-section';
 
 interface HomeProps {
   onAuthClick: () => void;
@@ -48,9 +49,32 @@ const marqueeItems = [
 
 export default function Home({ onAuthClick }: HomeProps) {
   const { user } = useAuth();
+  const { scrollY } = useScroll();
+
+  // Map scroll to background brightness
+  // Starting at #111827 (dark-navy) and lightening to a more vibrant #1b233a
+  const backgroundColor = useTransform(
+    scrollY,
+    [0, 400],
+    ['#111827', '#1b233a']
+  );
+
+  // Add a radial glow that intensifies as the card tilts
+  const glowOpacity = useTransform(scrollY, [0, 400], [0, 1]);
 
   return (
-    <div className="min-h-screen bg-dark-navy overflow-hidden">
+    <motion.div
+      className="min-h-screen overflow-hidden relative"
+      style={{ backgroundColor }}
+    >
+      {/* Dynamic background glow */}
+      <motion.div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          opacity: glowOpacity,
+          background: "radial-gradient(circle at 50% 30%, rgba(37, 99, 235, 0.15) 0%, transparent 70%)"
+        }}
+      />
       <div className="relative pb-8 md:pb-12">
         <ContainerScroll
           titleComponent={
@@ -102,16 +126,16 @@ export default function Home({ onAuthClick }: HomeProps) {
               >
                 {user ? (
                   <Link to="/features">
-                    <InteractiveHoverButton 
-                      text="Explore Matches" 
-                      className="bg-gradient-to-r from-primary to-secondary text-white border-none px-8 py-3 hover:from-primary-600 hover:to-secondary-600 [&>span:nth-child(4)]:group-hover:text-white" 
+                    <InteractiveHoverButton
+                      text="Explore Matches"
+                      className="bg-primary text-white px-6 py-3 hover:bg-primary-600 [&>span:nth-child(4)]:group-hover:text-white"
                     />
                   </Link>
                 ) : (
                   <InteractiveHoverButton
                     text="Join Networkly"
                     onClick={onAuthClick}
-                    className="bg-gradient-to-r from-primary to-secondary text-white border-none px-8 py-3 hover:from-primary-600 hover:to-secondary-600 [&>span:nth-child(4)]:group-hover:text-white"
+                    className="bg-primary text-white px-6 py-3 hover:bg-primary-600 [&>span:nth-child(4)]:group-hover:text-white"
                   />
                 )}
                 <Link to="/features">
@@ -124,7 +148,7 @@ export default function Home({ onAuthClick }: HomeProps) {
             </motion.div>
           }
         >
-          <motion.div 
+          <motion.div
             className="relative h-full w-full text-white"
             initial={{ opacity: 0, scale: 0.95, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -255,9 +279,9 @@ export default function Home({ onAuthClick }: HomeProps) {
               <div className="flex flex-col items-center text-center p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:border-white/20 h-full">
                 {/* Icon Container */}
                 <div className="relative mb-6 flex items-center justify-center">
-                  <img 
-                    src="/assets/logos/1st.png" 
-                    alt="Connect with Opportunities" 
+                  <img
+                    src="/assets/logos/1st.png"
+                    alt="Connect with Opportunities"
                     className="w-48 h-48 object-contain"
                   />
                 </div>
@@ -288,9 +312,9 @@ export default function Home({ onAuthClick }: HomeProps) {
               <div className="flex flex-col items-center text-center p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:border-white/20 h-full">
                 {/* Icon Container */}
                 <div className="relative mb-6 flex items-center justify-center">
-                  <img 
-                    src="/assets/logos/2nd.png" 
-                    alt="Join as a Mentor or Organization" 
+                  <img
+                    src="/assets/logos/2nd.png"
+                    alt="Join as a Mentor or Organization"
                     className="w-48 h-48 object-contain"
                   />
                 </div>
@@ -320,9 +344,9 @@ export default function Home({ onAuthClick }: HomeProps) {
               <div className="flex flex-col items-center text-center p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:border-white/20 h-full">
                 {/* Icon Container */}
                 <div className="relative mb-6 flex items-center justify-center">
-                  <img 
-                    src="/assets/logos/networklylogo.png" 
-                    alt="Get the Full Networkly Experience" 
+                  <img
+                    src="/assets/logos/networklylogo.png"
+                    alt="Get the Full Networkly Experience"
                     className="w-40 h-40 object-contain"
                   />
                 </div>
@@ -344,6 +368,8 @@ export default function Home({ onAuthClick }: HomeProps) {
         </div>
       </section>
 
+      <SmartDiscoverySection />
+
       <section className="relative py-20">
         <div className="relative overflow-hidden border-y border-white/10 bg-dark-navy py-16">
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
@@ -358,9 +384,9 @@ export default function Home({ onAuthClick }: HomeProps) {
                 </p>
               </div>
               <Link to="/features">
-                <InteractiveHoverButton 
-                  text="Open Opportunity Hub" 
-                  className="border-white/40 bg-white/10 px-8 py-3 text-white/80 hover:border-white hover:text-white [&>span:nth-child(4)]:group-hover:text-white" 
+                <InteractiveHoverButton
+                  text="Open Opportunity Hub"
+                  className="border-white/40 bg-white/10 px-8 py-3 text-white/80 hover:border-white hover:text-white [&>span:nth-child(4)]:group-hover:text-white"
                 />
               </Link>
             </div>
@@ -464,15 +490,15 @@ export default function Home({ onAuthClick }: HomeProps) {
         {/* Background gradient effects */}
         <div className="absolute inset-0 bg-gradient-to-b from-dark-navy via-dark-navy to-dark-navy/95"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10"></div>
-        
+
         <div className="relative max-w-6xl mx-auto px-6 md:px-8 text-center">
           {/* Networkly logo */}
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.8 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ 
-              duration: 0.6, 
+            transition={{
+              duration: 0.6,
               delay: 0.1,
               type: "spring",
               stiffness: 150
@@ -480,21 +506,21 @@ export default function Home({ onAuthClick }: HomeProps) {
             className="flex justify-center items-center mb-12"
           >
             <div className="relative">
-              <motion.div 
+              <motion.div
                 className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center shadow-2xl shadow-primary/20 backdrop-blur-sm border border-white/10"
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ 
-                  duration: 0.6, 
+                transition={{
+                  duration: 0.6,
                   delay: 0.2,
                   type: "spring",
                   stiffness: 200
                 }}
               >
-                <motion.img 
-                  src="/assets/logos/networklylogo.png" 
-                  alt="Networkly" 
+                <motion.img
+                  src="/assets/logos/networklylogo.png"
+                  alt="Networkly"
                   className="w-24 h-24 md:w-32 md:h-32 object-contain"
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
@@ -556,6 +582,6 @@ export default function Home({ onAuthClick }: HomeProps) {
           </motion.div>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 }
